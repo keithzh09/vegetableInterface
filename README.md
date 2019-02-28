@@ -29,24 +29,23 @@
 
 - 1.1 注册：/user/register
 - 1.2 登录：/user/login
-- 1.3 获取模型信息：/user/model/information
-- 1.4 选择模型进行预测：/user/model/predict
-- 1.5 查询蔬菜价格曲线：/user/vegetable/k_line
-- 1.6 查询蔬菜信息：/user/vegetable/information
+- 1.3 修改密码：/user/alter_pwd
+- 1.4 获取模型信息：/user/model/information
+- 1.5 选择模型进行预测：/user/model/predict
+- 1.6 查询蔬菜价格曲线：/user/vegetable/k_line
+- 1.7 查询蔬菜信息：/user/vegetable/information
 
 ##### 2. 管理员接口
 
-- 2.1 管理员登录：/master/login
-- 2.2 管理员增删系统的蔬菜种类：/master/alter_vegetable
-- 2.3 管理员禁用用户：/master/ban_user
-- 2.4 管理员删除用户：/master/delete_user
-- 2.5 管理员进行某种蔬菜模型的训练：/master/train_model
+- 2.1 管理员增删系统的蔬菜种类：/master/alter_vegetable
+- 2.2 管理员禁用用户：/master/ban_user
+- 2.3 管理员删除用户：/master/delete_user
+- 2.4 管理员进行某种蔬菜模型的训练：/master/train_model
 
 ##### 3. 超级管理员接口
 
-- 3.1 超级管理员登录：/root/login
-- 3.2 超级管理员从用户中添加管理员：/root/add_master
-- 3.3 超级管理员删除管理员：/root/delete_master
+- 3.1 超级管理员从用户中添加管理员：/root/add_master
+- 3.2 超级管理员删除管理员：/root/delete_master
 
 #### 具体实现
 
@@ -117,7 +116,42 @@
 
 
 
-##### 1.3 获取模型信息API
+##### 1.3 修改密码API
+
+###### 简要描述
+
+- 用户修改密码
+
+###### 请求URL
+
+- /user/alter_pwd
+
+请求方式
+
+- POST
+
+###### 参数
+
+|    参数名    | 必选 |  类型   |     说明     |
+| :----------: | :--: | :-----: | :----------: |
+|  user_name   |  是  | string' |    用户名    |
+| new_password |  是  | string  |   用户密码   |
+| re_password  |  是  | string  | 重新输入密码 |
+|    email     |  是  | string  |   电子邮箱   |
+|  email_code  |  是  | string  |  邮箱验证码  |
+
+###### 返回示例
+
+```json
+{
+    "code": 200, 
+    "msg": "successfully"
+}
+```
+
+
+
+##### 1.4 获取模型信息API
 
 ###### 简要描述
 
@@ -167,7 +201,7 @@
 
 
 
-##### 1.4 模型预测API：
+##### 1.5 模型预测API
 
 ###### 简要描述
 
@@ -214,7 +248,7 @@
 
 
 
-##### 1.5 查询蔬菜价格曲线API：
+##### 1.6 查询蔬菜价格曲线API
 
 ###### 简要描述
 
@@ -259,13 +293,11 @@
 
 
 
-
-
-##### 1.6 查询蔬菜信息API：
+##### 1.7 查询蔬菜信息API
 
 ###### 简要描述
 
-- 查询蔬信息
+- 查询蔬菜信息
 
 ###### 请求URL
 
@@ -298,4 +330,194 @@
 | 字段名 |  类型  |        说明        |
 | :----: | :----: | :----------------: |
 |  msg   | string | 对该蔬菜的信息介绍 |
+
+
+
+##### 2.1 增删蔬菜种类API
+
+###### 简要描述
+
+- 管理员增删系统的蔬菜种类（前端应该设计地成为列出可选择项，即江南市场拥有的蔬菜）
+
+###### 请求URL
+
+- /master/alter_vegetable
+
+请求方式
+
+- POST
+
+###### 参数
+
+|     参数名     | 必选 |     类型      |    说明    |
+| :------------: | :--: | :-----------: | :--------: |
+| vegetable_name |  是  | list & string | 多个蔬菜名 |
+|  operate_type  |  是  |    boolean    |   增/删    |
+
+###### 返回示例
+
+```json
+{
+    "code": 200, 
+    "msg": "alter successfully", 
+}
+```
+
+
+
+##### 2.2 禁用用户API
+
+###### 简要描述
+
+- 管理员禁用用户
+
+###### 请求URL
+
+- /master/ban_user
+
+请求方式
+
+- POST
+
+###### 参数
+
+|  参数名   | 必选 |  类型  |  说明  |
+| :-------: | :--: | :----: | :----: |
+| user_name |  是  | string | 用户名 |
+
+###### 返回示例
+
+```json
+{
+    "code": 200, 
+    "msg": "ban successfully", 
+}
+```
+
+
+
+##### 2.3 删除用户API
+
+###### 简要描述
+
+- 管理员删除用户
+
+###### 请求URL
+
+- /master/delete_user
+
+请求方式
+
+- POST
+
+###### 参数
+
+|  参数名   | 必选 |  类型  |  说明  |
+| :-------: | :--: | :----: | :----: |
+| user_name |  是  | string | 用户名 |
+
+###### 返回示例
+
+```json
+{
+    "code": 200, 
+    "msg": "delete successfully", 
+}
+```
+
+
+
+##### 2.4 进行某种蔬菜模型的训练API
+
+###### 简要描述
+
+- 管理员进行某种蔬菜模型的训练
+
+###### 请求URL
+
+- /master/train_model
+
+请求方式
+
+- POST
+
+###### 参数
+
+|   参数名   | 必选 |  类型  |  说明  |
+| :--------: | :--: | :----: | :----: |
+| model_name |  是  | string | 用户名 |
+|  veg_name  |  是  | string | 蔬菜名 |
+
+###### 返回示例
+
+```json
+{
+    "code": 200, 
+    "msg": "start to train", 
+}
+```
+
+
+
+##### 3.1 添加管理员API
+
+###### 简要描述
+
+- 超级管理员从用户中添加管理员
+
+###### 请求URL
+
+- /root/add_master
+
+请求方式
+
+- POST
+
+###### 参数
+
+|  参数名   | 必选 |  类型  |  说明  |
+| :-------: | :--: | :----: | :----: |
+| user_name |  是  | string | 用户名 |
+
+###### 返回示例
+
+```json
+{
+    "code": 200, 
+    "msg": "add seccessfully", 
+}
+```
+
+
+
+##### 3.1 删除管理员API
+
+###### 简要描述
+
+- 超级管理员删除管理员
+
+###### 请求URL
+
+- /root/delete_master
+
+请求方式
+
+- POST
+
+###### 参数
+
+|  参数名   | 必选 |  类型  |  说明  |
+| :-------: | :--: | :----: | :----: |
+| user_name |  是  | string | 用户名 |
+
+###### 返回示例
+
+```json
+{
+    "code": 200, 
+    "msg": "delete seccessfully", 
+}
+```
+
+
 
