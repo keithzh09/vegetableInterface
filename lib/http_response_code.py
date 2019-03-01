@@ -15,14 +15,20 @@ response = {
     20201: {'code': 20201, 'msg': 'User does not exist'},
     # 密码错误
     20202: {'code': 20202, 'msg': 'Password error'},
-    # 无权限
-    20203: {'code': 20203, 'msg': 'None permission'},
-    # 项目不存在
-    20204: {'code': 20204, 'msg': 'Project does not exist', 'params': None},
     # 创建新用户失败，已存在用户名
-    20301: {'code': 20301, 'msg': 'User already exists'},
-    # 添加项目参数是被，数据库没有提交的参数
-    20302: {'code': 20302, 'msg': 'Param does not exist'},
-    # 不存在网关
-    20303: {'code': 20303, 'msg': 'Gateway does not exist'}
+    20203: {'code': 20203, 'msg': 'User already exists'},
+    # 无权限
+    20204: {'code': 20204, 'msg': 'None permission'},
+    # 缺少蔬菜
+    20301: {'code': 20301, 'msg': 'Lack vegetable'},
+    # 缺少蔬菜价格
+    20302: {'code': 20302, 'msg': 'Lack vegetable price'},
+    # 缺少蔬菜信息
+    20303: {'code': 20303, 'msg': 'Lack vegetable information'},
+    # 缺少模型
+    20401: {'code': 20401, 'msg': 'Lack model'},
+    # 无模型信息
+    20402: {'code': 20402, 'msg': 'Lack model information'}
+
+
 }

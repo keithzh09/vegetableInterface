@@ -77,7 +77,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "successfully"
+    "msg": "Handle Successfully"
 }
 ```
 
@@ -110,7 +110,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "successfully"
+    "msg": "Handle Successfully"
 }
 ```
 
@@ -145,7 +145,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "successfully"
+    "msg": "Handle Successfully"
 }
 ```
 
@@ -174,7 +174,7 @@
 ```json
 {
     "code": 200,
-    "msg": "successfully",
+    "msg": "Handle Successfully",
     "data": {
         "name": ["ARIMA模型", "BP神经网络模型", "LSTM神经网络模型"],
         "msg": ["误差在1%以内准确率30%，5%以内准确率40%， 10%以内准确率50%", "误差在1%以内准确率30%，5%以内准确率40%， 10%以内准确率50%", "误差在1%以内准确率30%，5%以内准确率40%， 10%以内准确率50%"]
@@ -229,7 +229,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "successfully", 
+    "msg": "Handle Successfully", 
     "data": {
         "date": ["2018-01-01", "2018-01-02", ... , "2019-03-01"],
         "price": [11.1, 11.1 , ... , 11.1]
@@ -274,7 +274,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "successfully", 
+    "msg": "Handle Successfully", 
     "data": {
         "vegetable_name": ["大白菜", "小白菜"],
         "date": ["2018-01-01", "2018-01-02", ... , "2019-03-01"],
@@ -318,7 +318,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "successfully", 
+    "msg": "Handle Successfully", 
     "data": {
         "msg":"xxx是一种生长在冬天的植物"
     }
@@ -359,7 +359,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "alter successfully", 
+    "msg": "Handle Successfully", 
 }
 ```
 
@@ -390,7 +390,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "ban successfully", 
+    "msg": "Handle Successfully", 
 }
 ```
 
@@ -421,7 +421,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "delete successfully", 
+    "msg": "Handle Successfully", 
 }
 ```
 
@@ -453,7 +453,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "start to train", 
+    "msg": "Handle Successfully", 
 }
 ```
 
@@ -484,13 +484,13 @@
 ```json
 {
     "code": 200, 
-    "msg": "add seccessfully", 
+    "msg": "Handle Successfully", 
 }
 ```
 
 
 
-##### 3.1 删除管理员API
+##### 3.2 删除管理员API
 
 ###### 简要描述
 
@@ -515,7 +515,7 @@
 ```json
 {
     "code": 200, 
-    "msg": "delete seccessfully", 
+    "msg": "Handle Successfully", 
 }
 ```
 
