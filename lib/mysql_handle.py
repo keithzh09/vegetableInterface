@@ -30,6 +30,7 @@ class DBFuncClass:
         :param dict_data: 插入的数据
         :return: True or False
         """
+        # 字典转为数据对象
         model = dict_to_model(db_model, dict_data)
         try:
             model.save()
