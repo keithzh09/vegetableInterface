@@ -8,6 +8,7 @@ from peewee import CharField, BigIntegerField
 
 class PredictModelModel(BaseModel):
     model_id = BigIntegerField(primary_key=True)
+    model_name = CharField()
     model_information = CharField()
 
     class Meta:

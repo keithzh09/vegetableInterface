@@ -39,8 +39,7 @@
 
 - 2.1 管理员增删系统的蔬菜种类：/master/alter_vegetable
 - 2.2 管理员禁用用户：/master/ban_user
-- 2.3 管理员删除用户：/master/delete_user
-- 2.4 管理员进行某种蔬菜模型的训练：/master/train_model
+- 2.3 管理员进行某种蔬菜模型的训练：/master/train_model
 
 ##### 3. 超级管理员接口
 
@@ -374,37 +373,6 @@
 ###### 请求URL
 
 - /master/ban_user
-
-请求方式
-
-- POST
-
-###### 参数
-
-|  参数名   | 必选 |  类型  |  说明  |
-| :-------: | :--: | :----: | :----: |
-| user_name |  是  | string | 用户名 |
-
-###### 返回示例
-
-```json
-{
-    "code": 200, 
-    "msg": "Handle Successfully", 
-}
-```
-
-
-
-##### 2.3 删除用户API
-
-###### 简要描述
-
-- 管理员删除用户
-
-###### 请求URL
-
-- /master/delete_user
 
 请求方式
 
