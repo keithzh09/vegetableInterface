@@ -12,8 +12,6 @@ class UserModel(BaseModel):
     user_name = CharField()
     user_pwd = CharField()
     user_state = IntegerField()
-    create_time = DateTimeField()
-    update_time = DateTimeField()
 
     class Meta:
         db_table = 'user'
