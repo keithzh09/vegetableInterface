@@ -7,11 +7,12 @@ from peewee import CharField, IntegerField, BigIntegerField, DateTimeField
 
 
 class UserModel(BaseModel):
-    user_id = BigIntegerField(primary_key=True)
+    # 会自动创建id变量
     group_id = BigIntegerField()
-    user_name = CharField()
-    user_pwd = CharField()
-    user_state = IntegerField()
+    user_name = CharField(max_length=20)
+    user_pwd = CharField(max_length=10)
+    # 用户状态，默认为1（启用）
+    user_state = IntegerField(default=1)
 
     class Meta:
         db_table = 'user'
