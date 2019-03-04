@@ -9,3 +9,5 @@ from .vegetable_model_dao import VegetableModelDao
 from .vegetable_predict_model_model_dao import VegetablePredictModelModelDao
 from .vegetable_price_model_dao import VegetablePriceModelDao
 from .predict_model_model_dao import PredictModelModelDao
+from .base_model_dao import create_all_table, drop_all_table
+
