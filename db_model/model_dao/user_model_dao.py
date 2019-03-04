@@ -26,14 +26,14 @@ class UserModelDao:
             return user_obj.user_id if user_obj.user_pwd == user_pwd else -2
 
     @staticmethod
-    def find_by_user_id(user_id):
+    def find_by_user_name(user_name):
         """
         通过用户ID查询数据
-        :param user_id:用户id
+        :param user_name:用户名
         :return:
         """
         try:
-            return UserModel.get(UserModel.user_id == user_id)
+            return UserModel.get(UserModel.user_name == user_name)
         except DoesNotExist:
             return None
 
@@ -48,7 +48,7 @@ class UserModelDao:
         """
         try:
             user_pwd = md5_encrypt(user_pwd)
-            UserModel.insert(user_code=user_name, user_key=user_pwd, group_id=group_id).execute()
+            UserModel.insert(user_name=user_name, user_pwd=user_pwd, group_id=group_id).execute()
             return True
         except Exception as error:
             print(error)

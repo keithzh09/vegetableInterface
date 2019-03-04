@@ -3,13 +3,12 @@
 # @time    : 19-3-3
 
 from db_model.model import BaseModel
-from peewee import CharField, BigIntegerField
+from peewee import CharField, BigIntegerField, TextField
 
 
 class PredictModelModel(BaseModel):
-    model_id = BigIntegerField(primary_key=True)
     model_name = CharField()
-    model_information = CharField()
+    model_information = TextField()
 
     class Meta:
         db_table = 'predict_model'

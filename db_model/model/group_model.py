@@ -7,7 +7,6 @@ from peewee import CharField, BigIntegerField
 
 
 class GroupModel(BaseModel):
-    group_id = BigIntegerField(primary_key=True)
     group_name = CharField()
 
     class Meta:
