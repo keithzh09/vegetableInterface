@@ -10,6 +10,10 @@ from lib.MD5_encrypt import md5_encrypt
 from time import time
 from datetime import datetime
 
+user_id_token_key = "user_id_token_key_"  # token 与 user_id记录的redis key前缀
+user_token_timeout = 3600 * 24  # token有效期
+timer_token = "timer_"  # 利用redis计数器实现自增id，防止高并发下token重复
+
 
 def get_user_id_from_token(token):
     """
@@ -19,11 +23,11 @@ def get_user_id_from_token(token):
     """
     if not token:
         return 0
-    cache_key = config.user_id_token_key + token
+    cache_key = user_id_token_key + token
     d = redis_client.get(cache_key)
     if d:
         # 设置过期时间
-        redis_client.expire(cache_key, config.user_token_timeout)
+        redis_client.expire(cache_key, user_token_timeout)
     return int(d) if d else -1
 
 
@@ -34,9 +38,10 @@ def set_user_id_token(token, user_id):
     :param user_id: 用户id
     :return:
     """
-    cache_key = config.user_id_token_key + token
+    cache_key = user_id_token_key + token
     redis_client.set(cache_key, user_id)
-    redis_client.expire(cache_key, config.user_token_timeout)
+    # 设置超时时间
+    redis_client.expire(cache_key, user_token_timeout)
 
 
 def get_one_token():
@@ -44,7 +49,8 @@ def get_one_token():
     随机生成一个32位的字符串
     :return:
     """
-    timer_key = config.timer_token + datetime.now().strftime("%Y-%m-%d")
+    timer_key = timer_token + datetime.now().strftime("%Y-%m-%d")
+    # 自增，防止高并发下重复
     timer_id = redis_client.incr(timer_key)
     redis_client.expire(timer_key, 3600 * 24)
     d = str(time()) + "_" + str(timer_id)

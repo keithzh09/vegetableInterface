@@ -57,10 +57,11 @@ def get_k_line():
     new_date = []
     for veg_name in vegetable_name:
         veg_id = VegetableModelDao.get_id_by_name(veg_name)
-        price = VegetablePriceModelDao.query_vegetable_price_data(2, veg_id, date[0], date[1])
-        print(type(price))
+        veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(2, veg_id, date[0], date[1])
+        price.append([veg_model.price for veg_model in veg_model_list])
+        new_date.append([veg_model.date for veg_model in veg_model_list])
 
-    response_data = {'vegetable_name': vegetable_name, 'price': price}
+    response_data = {'vegetable_name': vegetable_name, 'price': price, 'date': new_date}
     response_data.update(response[200])
     return json.dumps(response_data)
 

@@ -23,17 +23,17 @@ class UserModelDao:
         else:
             # 将user_key先MD5加密
             user_pwd = md5_encrypt(user_pwd)
-            return user_obj.user_id if user_obj.user_pwd == user_pwd else -2
+            return user_obj.id if user_obj.user_pwd == user_pwd else -2
 
     @staticmethod
-    def find_by_user_name(user_name):
+    def find_by_user_id(user_id):
         """
         通过用户ID查询数据
-        :param user_name:用户名
+        :param user_id:用户id
         :return:
         """
         try:
-            return UserModel.get(UserModel.user_name == user_name)
+            return UserModel.get(UserModel.user_id == user_id)
         except DoesNotExist:
             return None
 
