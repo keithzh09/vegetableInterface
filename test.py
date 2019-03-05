@@ -3,10 +3,13 @@
 # @time    : 19-3-5
 
 import pandas as pd
-from db_model.model_dao import VegetableModelDao, VegetablePriceModelDao
+from db_model.model_dao import VegetableModelDao, VegetablePriceModelDao, drop_all_table, create_all_table
 import time
+drop_all_table()
+create_all_table()
 
-# VegetableModelDao.add_vegetable('矮脚白菜', '它是一种白菜啊！！！')
+VegetableModelDao.add_vegetable('矮脚白菜', '它是一种白菜啊！！！')
+
 
 print(VegetableModelDao.get_id_by_name('矮脚白菜'))
 

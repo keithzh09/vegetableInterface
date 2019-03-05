@@ -1,7 +1,7 @@
 #### 登录注册功能
 
-- 不设置，任何人可查询价格曲线以及实现预测
-- 设置，任何人可查询价格曲线，但只有注册登录的人能够查询预测价格
+- 任何人可查询价格曲线以及蔬菜信息等
+- 设置，但只有注册登录的人能够查询预测价格
 - 预测价格就设置为接下来的10天左右，把预测值曲线列出来即可
 
 #### 爬虫
@@ -21,7 +21,7 @@
 
 - tensorflow
 - python的flask开发后台
-- 部署：使用docker-compose部署，redis，mongodb，python各自的镜像结合起来
+- 部署：使用docker-compose部署，nginx，redis，mysql，python各自的镜像结合起来
 
 #### 接口
 
@@ -37,9 +37,9 @@
 
 ##### 2. 管理员接口
 
-- 2.1 管理员增删系统的蔬菜种类：/master/alter_vegetable
-- 2.2 管理员禁用用户：/master/ban_user
-- 2.3 管理员进行某种蔬菜模型的训练：/master/train_model
+- 2.1 管理员增删系统的蔬菜种类：/manager/alter_vegetable
+- 2.2 管理员禁用用户：/manager/ban_user
+- 2.3 管理员进行某种蔬菜模型的训练：/manager/train_model
 
 ##### 3. 超级管理员接口
 
@@ -64,12 +64,13 @@
 
 ###### 参数
 
-|   参数名   | 必选 |  类型  |    说明    |
-| :--------: | :--: | :----: | :--------: |
-| user_name  |  是  | string |   用户名   |
-|  password  |  是  | string |  用户密码  |
-|   email    |  是  | string |  电子邮箱  |
-| email_code |  是  | string | 邮箱验证码 |
+|     参数名     | 必选 |  类型  |    说明    |
+| :------------: | :--: | :----: | :--------: |
+|   user_name    |  是  | string |   用户名   |
+|    password    |  是  | string |  用户密码  |
+| check_password |  是  | string |  确认密码  |
+|     email      |  是  | string |  电子邮箱  |
+|   email_code   |  是  | string | 邮箱验证码 |
 
 ###### 返回示例
 
@@ -339,7 +340,7 @@
 
 ###### 请求URL
 
-- /master/alter_vegetable
+- /manager/alter_vegetable
 
 请求方式
 
@@ -371,7 +372,7 @@
 
 ###### 请求URL
 
-- /master/ban_user
+- /manager/ban_user
 
 请求方式
 
@@ -402,7 +403,7 @@
 
 ###### 请求URL
 
-- /master/train_model
+- /manager/train_model
 
 请求方式
 
