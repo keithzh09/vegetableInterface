@@ -38,24 +38,24 @@ class UserModelDao:
             return None
 
     @staticmethod
-    def add_user(user_name, user_pwd, group_id):
+    def add_user(user_name, user_pwd, email):
         """
         创建新用户，user_state在数据库设置默认值为1
         :param user_name: 用户名
         :param user_pwd: 用户密码
-        :param group_id: 用户组ID
+        :param email: 邮箱
         :return:
         """
         try:
             user_pwd = md5_encrypt(user_pwd)
-            UserModel.insert(user_name=user_name, user_pwd=user_pwd, group_id=group_id).execute()
+            UserModel.insert(user_name=user_name, user_pwd=user_pwd, email = email).execute()
             return True
         except Exception as error:
             print(error)
             return False
 
     @staticmethod
-    def query_user(func_code, user_name="", user_state=1):
+    def query_user(func_code, user_name="", email="", user_state=1):
         """
         查找用户
         :param func_code: 条件类型，0为查找全部，1为按用户名查找，2为按用户状态查找，3为按组合条件查找
@@ -69,6 +69,8 @@ class UserModelDao:
                     func = UserModel.select().where(UserModel.user_name == user_name)
                 elif func_code == 2:
                     func = UserModel.select().where(UserModel.user_state == user_state)
+                elif func_code == 3:
+                    func = UserModel.select().where(UserModel.email == email)
                 else:
                     func = UserModel.select().where((UserModel.user_name == user_name) &
                                                     (UserModel.user_state == user_state))

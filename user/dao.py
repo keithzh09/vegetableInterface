@@ -9,6 +9,9 @@ from lib.redis_lib import redis_client
 from lib.MD5_encrypt import md5_encrypt
 from time import time
 from datetime import datetime
+import re
+from flask_mail import Mail
+from http_apis import app
 
 user_id_token_key = "user_id_token_key_"  # token 与 user_id记录的redis key前缀
 user_token_timeout = 3600 * 24  # token有效期
@@ -75,3 +78,27 @@ def check_user_able_access_url(user_id, url):
 
     # 检查权限
     return GroupPowerModelDao.check_group_permission(user.group_id, url)
+
+
+def send_async_email(msg):
+    '''
+    发送邮件
+    :param app: Flask类的一个实例
+    :param msg: 存储要发送信息的Message类
+    :return:
+    '''
+    with app.app_context():
+        mail = Mail(app)
+        mail.send(msg)
+
+#验证邮箱格式
+def validateEmail(email):
+    '''
+    检验邮箱格式是否正确
+    :param email: 邮箱地址
+    :return:
+    '''
+    if len(email) > 7:
+        if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email) != None:
+            return 1
+    return 0

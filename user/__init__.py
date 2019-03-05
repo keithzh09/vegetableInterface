@@ -2,4 +2,6 @@
 # @time    : 19-2-28
 # @author  : lin
 
-from .app import user_app
+from flask import Blueprint
+user_app = Blueprint("user_app", __name__)
+import user.app,user.dao
