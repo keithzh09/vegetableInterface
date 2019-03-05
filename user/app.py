@@ -9,7 +9,6 @@ from db_model.model_dao import UserModelDao, VegetableModelDao, VegetablePriceMo
 import json
 from lib.http_response_code import response
 from lib.decorator import catch_error
-import peewee
 import re
 import random
 from threading import Thread
@@ -20,6 +19,7 @@ from . import user_app
 @catch_error
 def index():
     return "hello"
+
 
 @user_app.route('login', methods=['POST'])
 @catch_error
@@ -49,17 +49,18 @@ def user_login():
     return json.dumps(response_data)
 
 
-
 email_code = ''
-@user_app.route("/register",methods = ['POST'])
+
+
+@user_app.route("/register", methods=['POST'])
 @catch_error
 def register():
-    '''
+    """
     用户注册功能
     :return:
-    '''
+    """
     global email_code
-    data = request.get_json()    #获取表单数据
+    data = request.get_json()  # 获取表单数据
     name = data.get("user_name")
     pwd = data.get("password")
     check_pwd = data.get("check_password")
@@ -68,57 +69,56 @@ def register():
 
     if name and pwd and email and user_email_code and check_pwd:
         if not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', name):
-            #用户名格式出错
+            # 用户名格式出错
             dict_info = response[20302]
         elif UserModelDao.query_user(1, user_name=name):
-            #用户名已存在
+            # 用户名已存在
             dict_info = response[20301]
         elif len(pwd) < 6:
-            #密码长度太短
+            # 密码长度太短
             dict_info = response[20303]
         elif check_pwd != pwd:
-            #两次密码输入不一致
+            # 两次密码输入不一致
             dict_info = response[20304]
         elif user_email_code != email_code:
-            #邮箱验证码错误
+            # 邮箱验证码错误
             dict_info = response[20305]
         else:
-            #插入新用户
+            # 插入新用户
             UserModelDao.add_user(name, pwd, email)
             dict_info = response[200]
     else:
-        #缺少参数
+        # 缺少参数
         dict_info = response[20101]
 
     return json.dumps(dict_info, ensure_ascii=False)
 
 
-
-#验证邮箱格式正确性，正确则发送邮箱
-@user_app.route("register/send_email",methods=['POST'])
+# 验证邮箱格式正确性，正确则发送邮箱
+@user_app.route("register/send_email", methods=['POST'])
 @catch_error
 def send_email():
-    '''
+    """
     开启另一个线程发送邮箱验证码
     :return:
-    '''
+    """
     global email_code
-    email = request.json["email"]   #获取用户输入的邮箱
+    email = request.json["email"]  # 获取用户输入的邮箱
 
-    if (dao.validateEmail(email)):   #检验邮箱格式
+    if dao.validate_email(email):  # 检验邮箱格式
         if UserModelDao.query_user(3, email=email):
-            #邮箱已被使用
+            # 邮箱已被使用
             dict_info = response[20306]
         else:
-            email_code = ''.join(str(i) for i in random.sample(range(0,9),4))   #生成4位随机验证码
+            email_code = ''.join(str(i) for i in random.sample(range(0, 9), 4))  # 生成4位随机验证码
             msg = Message('注册验证码', sender='434345158@qq.com', recipients=[email])
             msg.body = "您的注册验证码为" + email_code
-            thread = Thread(target=dao.send_async_email, args=[msg])   #开启另一线程执行发邮件功能
+            thread = Thread(target=dao.send_async_email, args=[msg])  # 开启另一线程执行发邮件功能
             thread.start()
-            #发送成功
+            # 发送成功z
             dict_info = response[200]
     else:
-        #缺少参数
+        # 缺少参数
         dict_info = response[20307]
 
     return json.dumps(dict_info, ensure_ascii=False)

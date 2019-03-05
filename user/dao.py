@@ -4,8 +4,8 @@
 
 
 from db_model.model_dao import UserModelDao, GroupPowerModelDao
-from lib.redis_lib import redis_client
 # from . import config
+from config.db_config import redis_client
 from lib.MD5_encrypt import md5_encrypt
 from time import time
 from datetime import datetime
@@ -81,24 +81,24 @@ def check_user_able_access_url(user_id, url):
 
 
 def send_async_email(msg):
-    '''
+    """
     发送邮件
-    :param app: Flask类的一个实例
     :param msg: 存储要发送信息的Message类
     :return:
-    '''
+    """
     with app.app_context():
         mail = Mail(app)
         mail.send(msg)
 
-#验证邮箱格式
-def validateEmail(email):
-    '''
+
+# 验证邮箱格式
+def validate_email(email):
+    """
     检验邮箱格式是否正确
     :param email: 邮箱地址
     :return:
-    '''
+    """
     if len(email) > 7:
-        if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email) != None:
+        if not re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email) is None:
             return 1
     return 0
