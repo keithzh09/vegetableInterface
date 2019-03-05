@@ -8,6 +8,14 @@ from peewee import DoesNotExist
 
 class VegetableModelDao:
     @staticmethod
+    def get_id_by_name(veg_name):
+        try:
+            obj = VegetableModel.get(VegetableModel.veg_name == veg_name)
+            return obj.id
+        except DoesNotExist:
+            return None
+
+    @staticmethod
     def get_information(veg_name):
         """
         通过蔬菜名查询数据

@@ -26,57 +26,45 @@ class VegetablePriceModelDao:
             return False
 
     @staticmethod
-    def query_vegetable_price_data(func_code, veg_id="", date="", date_type=True, price=1, price_type=True):
+    def query_vegetable_price_data(func_code, veg_id='', start_date='', stop_date='', start_price=0, stop_price=0):
+        # TODO:加个修饰器，当func_code与访问值不符合时返回错误
         """
         查找价格数据
         :param func_code: 条件类型，0为查找全部，1为按蔬菜名查找，2为按蔬菜名加日期，3为按蔬菜名加价格，4为组合三种因素
-        :param veg_id: 蔬菜id
-        :param date: 日期
-        :param date_type: 按日期上限或下限进行搜索，True为上限，否则下限
-        :param price: 价格
-        :param price_type: 按价格上限或下限进行搜索，True为上限，否则下限
-        :return:model列表
+        :param veg_id:
+        :param start_date: 开始日期
+        :param stop_date: 结束日期
+        :param start_price: 价格下限
+        :param stop_price: 价格上限
+        :return:
         """
         try:
             if func_code == 0:
-                func = VegetablePriceModel.select()
+                func = VegetablePriceModel.select().execute()
             elif func_code == 1:
-                func = VegetablePriceModel.select().where(VegetablePriceModel.veg_id == veg_id)
+                func = VegetablePriceModel.select().where(VegetablePriceModel.veg_id == veg_id).execute()
             elif func_code == 2:
-                if date_type:
-                    func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-                                                              (VegetablePriceModel.date <= date))
-                else:
-                    func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-                                                              (VegetablePriceModel.date >= date))
+                func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
+                                                          (VegetablePriceModel.date >= start_date) &
+                                                          (VegetablePriceModel.date <= stop_date)).execute()
             elif func_code == 3:
-                if price_type:
-                    func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-                                                              (VegetablePriceModel.price <= price))
-                else:
-                    func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-                                                              (VegetablePriceModel.price >= price))
+                func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
+                                                          (VegetablePriceModel.price >= start_price) &
+                                                          (VegetablePriceModel.price <= stop_price)).execute()
             else:
-                if date_type:
-                    if price_type:
-                        func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-                                                                  (VegetablePriceModel.date <= date) &
-                                                                  (VegetablePriceModel.price <= price))
-                    else:
-                        func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-                                                                  (VegetablePriceModel.date <= date) &
-                                                                  (VegetablePriceModel.price >= price))
-                else:
-                    if price_type:
-                        func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-                                                                  (VegetablePriceModel.date >= date) &
-                                                                  (VegetablePriceModel.price <= price))
-                    else:
-                        func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-                                                                  (VegetablePriceModel.date >= date) &
-                                                                  (VegetablePriceModel.price >= price))
-            return func.execute()
+                func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
+                                                          (VegetablePriceModel.date >= start_date) &
+                                                          (VegetablePriceModel.date <= stop_date) &
+                                                          (VegetablePriceModel.price >= start_price) &
+                                                          (VegetablePriceModel.price <= stop_price)).execute()
+            return func
         except Exception as error:
             print(error)
             return False
+
+    @staticmethod
+    def delete_all_data():
+        func = VegetablePriceModel.delete()
+        return func.execute()
+
 
