@@ -5,7 +5,7 @@
 
 from db_model.model_dao import UserModelDao, GroupPowerModelDao
 from lib.redis_lib import redis_client
-from . import config
+# from . import config
 from lib.MD5_encrypt import md5_encrypt
 from time import time
 from datetime import datetime
