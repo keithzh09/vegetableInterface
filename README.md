@@ -38,7 +38,7 @@
 ##### 2. 管理员接口
 
 - 2.1 管理员增删系统的蔬菜种类：/manager/alter_vegetable
-- 2.2 管理员禁用用户：/manager/ban_user
+- 2.2 管理员禁用用户：/manager/set_user_state
 - 2.3 管理员进行某种蔬菜模型的训练：/manager/train_model
 
 ##### 3. 超级管理员接口
