@@ -26,7 +26,7 @@ class VegetablePriceModelDao:
             return False
 
     @staticmethod
-    def query_vegetable_price_data(func_code, veg_id='', start_date='', stop_date='', start_price=0, stop_price=0):
+    def query_vegetable_price_data(func_code=0, veg_id='', start_date='', stop_date='', start_price=0, stop_price=0):
         # TODO:加个修饰器，当func_code与访问值不符合时返回错误
         """
         查找价格数据

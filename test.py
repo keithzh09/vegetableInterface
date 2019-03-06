@@ -2,24 +2,28 @@
 # @author  : lin
 # @time    : 19-3-5
 
+from db_model.model_dao import VegetablePriceModelDao, VegetableModelDao
+from cron_spider import spider_vegetable
+#
 import pandas as pd
-from db_model.model_dao import VegetableModelDao, VegetablePriceModelDao, drop_all_table, create_all_table
 import time
-drop_all_table()
-create_all_table()
-
-VegetableModelDao.add_vegetable('矮脚白菜', '它是一种白菜啊！！！')
-
-
-print(VegetableModelDao.get_id_by_name('矮脚白菜'))
-
-baicai_data = pd.read_csv('baicai.csv').iloc[:, 0:3]
-print(VegetablePriceModelDao.delete_all_data())
+# drop_all_table()
+# create_all_table()
+#
+# VegetableModelDao.add_vegetable('矮脚白菜', '它是一种白菜啊！！！')
+#
+#
+# print(VegetableModelDao.get_id_by_name('矮脚白菜'))
+#
+veg_data = pd.read_csv('丝瓜.csv').iloc[:, 1:4]
+# print(veg_data)
+# print(VegetablePriceModelDao.delete_all_data())
 
 start_t = time.time()
 isd = VegetableModelDao.get_id_by_name('矮脚白菜')
-for index, row in baicai_data.iterrows():
+for index, row in veg_data.iterrows():
     VegetablePriceModelDao.add_one_data(isd, row['date'], row['price'], '山东')
 stop_t = time.time()
 
-print(stop_t-start_t)
+# print(stop_t-start_t)
+
