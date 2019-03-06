@@ -43,4 +43,17 @@ class VegetableModelDao:
             print(error)
             return False
 
+    @staticmethod
+    def delete_vegetable(veg_name):
+        """
+        删除蔬菜信息
+        :param veg_name:
+        :return:
+        """
+        try:
+            VegetableModel.delete().where(VegetableModel.veg_name == veg_name).execute()
+            return True
+        except Exception as error:
+            print(error)
+            return False
 

@@ -71,6 +71,9 @@ class UserModelDao:
                     func = UserModel.select().where(UserModel.user_state == user_state)
                 elif func_code == 3:
                     func = UserModel.select().where(UserModel.email == email)
+                elif func_code == 4:
+                    func = UserModel.select().where((UserModel.user_name == user_name) &
+                                                   (UserModel.email == email))
                 else:
                     func = UserModel.select().where((UserModel.user_name == user_name) &
                                                     (UserModel.user_state == user_state))
@@ -82,15 +85,47 @@ class UserModelDao:
             return False
 
     @staticmethod
-    def set_user_state(user_id, user_state):
+    def set_user_state(user_name, user_state):
         """
-        设置用户状态，不显式删除，禁用即可
+        设置用户状态
         :param user_id: 用户ID
         :param user_state: 用户状态，1为启动，0为禁止
         :return:
         """
         try:
-            UserModel.update(user_state=user_state).where(UserModel.user_id == user_id).execute()
+            UserModel.update(user_state=user_state).where(UserModel.user_name == user_name).execute()
             return True
-        except DoesNotExist:
+        except Exception as error:
+            print(error)
+            return False
+
+
+    @staticmethod
+    def alter_user_pwd(user_name, user_pwd):
+        """
+        修改用户密码
+        :param user_name: 用户名
+        :return:
+        """
+        try:
+            user_pwd = md5_encrypt(user_pwd)
+            UserModel.update(user_pwd=user_pwd).where(UserModel.user_name == user_name).execute()
+        except Exception as error:
+            print(error)
+            return False
+
+
+    @staticmethod
+    def set_group_id(user_name, group_id):
+        """
+        设置用户组id，即添加或删除管理员
+        :param user_name: 用户名
+        :param group_id: 用户组id，2为管理员，1为普通用户
+        :return:
+        """
+        try:
+            UserModel.update(group_id=group_id).where(UserModel.user_name == user_name).execute()
+            return True
+        except Exception as error:
+            print(error)
             return False

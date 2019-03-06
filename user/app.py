@@ -3,15 +3,12 @@
 # @time    : 19-2-28
 
 from flask import request
-from flask_mail import Message
 from . import dao
-from db_model.model_dao import UserModelDao, VegetableModelDao, VegetablePriceModelDao
+from db_model.model_dao import UserModelDao, VegetableModelDao, VegetablePriceModelDao,PredictModelModelDao
 import json
 from lib.http_response_code import response
 from lib.decorator import catch_error
 import re
-import random
-from threading import Thread
 from . import user_app
 
 
@@ -49,79 +46,78 @@ def user_login():
     return json.dumps(response_data)
 
 
-email_code = ''
+register_email_code = ''
 
-
-@user_app.route("/register", methods=['POST'])
+@user_app.route("register", methods=['POST'])
 @catch_error
 def register():
     """
     用户注册功能
     :return:
     """
-    global email_code
-    data = request.get_json()  # 获取表单数据
-    name = data.get("user_name")
-    pwd = data.get("password")
-    check_pwd = data.get("check_password")
-    email = data.get("email")
-    user_email_code = data.get("email_code")
+    global register_email_code
+    data = request.json  # 获取表单数据
+    name = data["user_name"]
+    pwd = data["password"]
+    check_pwd = data["check_password"]
+    email = data["email"]
+    user_email_code = data["email_code"]
 
     if name and pwd and email and user_email_code and check_pwd:
         if not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', name):
             # 用户名格式出错
-            dict_info = response[20302]
+            response_data = response[20302]
         elif UserModelDao.query_user(1, user_name=name):
             # 用户名已存在
-            dict_info = response[20301]
+            response_data = response[20301]
         elif len(pwd) < 6:
             # 密码长度太短
-            dict_info = response[20303]
+            response_data = response[20303]
         elif check_pwd != pwd:
             # 两次密码输入不一致
-            dict_info = response[20304]
-        elif user_email_code != email_code:
+            response_data = response[20304]
+        elif user_email_code != register_email_code:
             # 邮箱验证码错误
-            dict_info = response[20305]
+            response_data = response[20305]
         else:
             # 插入新用户
             UserModelDao.add_user(name, pwd, email)
-            dict_info = response[200]
+            response_data = response[200]
     else:
         # 缺少参数
-        dict_info = response[20101]
+        response_data = response[20101]
 
-    return json.dumps(dict_info, ensure_ascii=False)
+    return json.dumps(response_data, ensure_ascii=False)
 
 
 # 验证邮箱格式正确性，正确则发送邮箱
 @user_app.route("register/send_email", methods=['POST'])
 @catch_error
-def send_email():
+def register_send_email():
     """
-    开启另一个线程发送邮箱验证码
+    注册时，开启另一个线程发送邮箱验证码
     :return:
     """
-    global email_code
+    global register_email_code
     email = request.json["email"]  # 获取用户输入的邮箱
 
-    if dao.validate_email(email):  # 检验邮箱格式
-        if UserModelDao.query_user(3, email=email):
+    if email :
+        if not dao.validate_email(email):
+            # 邮箱格式错误
+            response_data = response[20307]
+        elif UserModelDao.query_user(3, email=email):
             # 邮箱已被使用
-            dict_info = response[20306]
+            response_data = response[20306]
         else:
-            email_code = ''.join(str(i) for i in random.sample(range(0, 9), 4))  # 生成4位随机验证码
-            msg = Message('注册验证码', sender='434345158@qq.com', recipients=[email])
-            msg.body = "您的注册验证码为" + email_code
-            thread = Thread(target=dao.send_async_email, args=[msg])  # 开启另一线程执行发邮件功能
-            thread.start()
-            # 发送成功z
-            dict_info = response[200]
+            register_email_code = dao.thread_send_email(email)
+            print(register_email_code)
+            # 发送成功
+            response_data = response[200]
     else:
         # 缺少参数
-        dict_info = response[20307]
+        response_data = response[20101]
 
-    return json.dumps(dict_info, ensure_ascii=False)
+    return json.dumps(response_data, ensure_ascii=False)
 
 
 @user_app.route('vegetable/k_line', methods=['POST'])
@@ -150,3 +146,123 @@ def get_k_line():
     return json.dumps(response_data)
 
 
+@user_app.route('vegetable/information', methods=['POST'])
+@catch_error
+def vegetable_info():
+    """
+    获取蔬菜信息
+    :return:
+    """
+    vegetable_name = request.json['vegetable_name']
+    if vegetable_name:
+        if VegetableModelDao.get_id_by_name(vegetable_name):
+            vegetable_information = VegetableModelDao.get_information(vegetable_name)
+            if vegetable_information is None:
+                # 无蔬菜信息
+                response_data = response[20503]
+            else:
+                #获取信息成功
+                response_data = {'vegetable_info': vegetable_information}
+                response_data.update(response[200])
+        else:
+            #缺少蔬菜
+            response_data = response[20401]
+    else:
+        #缺少参数
+        response_data = response[20101]
+    return json.dumps(response_data, ensure_ascii=False)
+
+
+alter_email_code = ''
+
+@user_app.route('alter_pwd', methods=['POST'])
+@catch_error
+def alter_pwd():
+    """
+    用户修改密码
+    :return:
+    """
+    global alter_email_code
+    req_json = request.json
+    user_name = req_json['user_name']
+    new_password = req_json['new_password']
+    re_password = req_json['re_password']
+    email = req_json['email']
+    user_email_code = req_json['email_code']
+
+    if user_name and new_password and re_password and email and user_email_code:
+        if not UserModelDao.query_user(1, user_name=user_name):
+            # 用户名不存在
+            response_data = response[20201]
+        elif new_password != re_password:
+            # 两次输入密码不一致
+            response_data = response[20304]
+        elif user_email_code != alter_email_code:
+            # 邮箱验证码错误
+            response_data = response[20305]
+        else:
+            #修改成功
+            UserModelDao.alter_user_pwd(user_name, new_password)
+            response_data = response[200]
+    else:
+        # 缺少参数
+        response_data = response[20101]
+
+    return json.dumps(response_data, ensure_ascii=False)
+
+
+@user_app.route('alter_pwd/send_email', methods=['POST'])
+@catch_error
+def alter_send_email():
+    """
+    修改密码时，开启另一个线程发送邮箱验证码
+    :return:
+    """
+    global alter_email_code
+    email = request.json['email']
+    user_name = request.json['user_name']
+
+    if email and user_name:
+        if not dao.validate_email(email):
+            # 邮箱格式错误
+            response_data = response[20307]
+        elif not UserModelDao.query_user(4, user_name=user_name, email=email):
+            # 用户名和邮箱不匹配
+            response_data = response[20308]
+        else:
+            alter_email_code = dao.thread_send_email(email)
+            # 发送成功
+            response_data = response[200]
+    else:
+        # 缺少参数
+        response_data = response[20101]
+
+    return json.dumps(response_data, ensure_ascii=False)
+
+
+@user_app.route('model/information', methods=['POST'])
+@catch_error
+def model_info():
+    """
+    获取模型信息
+    :return:
+    """
+    model_name = request.json['model_name']
+    if model_name:
+        if PredictModelModelDao.query_model(model_name):
+            model_information = PredictModelModelDao.get_information(model_name)
+            if model_information is None:
+                # 无模型信息
+                response_data = response[20502]
+            else:
+                #获取信息成功
+                response_data = {'model_info': model_information}
+                response_data.update(response[200])
+        else:
+            #缺少模型
+            response_data = response[20501]
+    else:
+        #缺少参数
+        response_data = response[20101]
+
+    return json.dumps(response_data, ensure_ascii=False)
