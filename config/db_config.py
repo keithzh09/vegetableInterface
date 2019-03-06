@@ -16,9 +16,9 @@ redis_config = {
 
 # mysql配置
 mysql_config = {
-    'db_name': 'vegetable_predict',
+    'db_name': 'vegetable',
     'db_user': 'root',
-    'db_password': '112366',
+    'db_password': 'aa134333',
     'db_port': 3306,
     'db_host': '127.0.0.1'
 }

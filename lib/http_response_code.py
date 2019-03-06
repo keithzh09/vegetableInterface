@@ -31,7 +31,9 @@ response = {
     # 邮箱已被使用
     20306: {'code': 20306, 'msg': 'Email is used'},
     # 邮箱格式错误
-    20307: {'code': 20307, 'msg': 'Email format errior'},
+    20307: {'code': 20307, 'msg': 'Email format error'},
+    # 用户名和邮箱不匹配
+    20308: {'code': 20308, 'msg': 'User and email do not match'},
     # 缺少蔬菜
     20401: {'code': 20401, 'msg': 'Lack vegetable'},
     # 缺少蔬菜价格

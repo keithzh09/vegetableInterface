@@ -1,7 +1,7 @@
 # coding: utf-8
 # @author  : lin
 # @time    : 19-2-28
-
+from threading import Thread
 
 from db_model.model_dao import UserModelDao, GroupPowerModelDao
 # from . import config
@@ -10,8 +10,9 @@ from lib.MD5_encrypt import md5_encrypt
 from time import time
 from datetime import datetime
 import re
-from flask_mail import Mail
+from flask_mail import Mail, Message
 from http_apis import app
+import random
 
 user_id_token_key = "user_id_token_key_"  # token 与 user_id记录的redis key前缀
 user_token_timeout = 3600 * 24  # token有效期
@@ -80,7 +81,7 @@ def check_user_able_access_url(user_id, url):
     return GroupPowerModelDao.check_group_permission(user.group_id, url)
 
 
-def send_async_email(msg):
+def send_email(msg):
     """
     发送邮件
     :param msg: 存储要发送信息的Message类
@@ -102,3 +103,11 @@ def validate_email(email):
         if not re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email) is None:
             return 1
     return 0
+
+def thread_send_email(email):
+    email_code = ''.join(str(i) for i in random.sample(range(0, 9), 4))  # 生成4位随机验证码
+    msg = Message('注册验证码', sender='434345158@qq.com', recipients=[email])
+    msg.body = "您的注册验证码为" + email_code
+    thread = Thread(target=send_email, args=[msg])  # 开启另一线程执行发邮件功能
+    thread.start()
+    return email_code
