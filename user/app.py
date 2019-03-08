@@ -1,14 +1,14 @@
 # coding: utf-8
 # @author  : lin
 # @time    : 19-2-28
+import re
+import json
 
 from flask import request
 from . import dao
-from db_model.model_dao import UserModelDao, VegetableModelDao, VegetablePriceModelDao,PredictModelModelDao
-import json
+from db_model.model_dao import UserModelDao, VegetableModelDao, VegetablePriceModelDao, PredictModelModelDao
 from lib.http_response_code import response
 from lib.decorator import catch_error
-import re
 from . import user_app
 
 
@@ -25,7 +25,6 @@ def user_login():
     获取api调用token
     :return:
     """
-    # 测试用户：test_user,密码：TestUser_Key
     req_json = request.json
     user_name = req_json["user_name"]
     user_pwd = req_json["user_pwd"]
@@ -47,6 +46,7 @@ def user_login():
 
 
 register_email_code = ''
+
 
 @user_app.route("register", methods=['POST'])
 @catch_error
@@ -101,7 +101,7 @@ def register_send_email():
     global register_email_code
     email = request.json["email"]  # 获取用户输入的邮箱
 
-    if email :
+    if email:
         if not dao.validate_email(email):
             # 邮箱格式错误
             response_data = response[20307]
@@ -146,34 +146,8 @@ def get_k_line():
     return json.dumps(response_data)
 
 
-@user_app.route('vegetable/information', methods=['POST'])
-@catch_error
-def vegetable_info():
-    """
-    获取蔬菜信息
-    :return:
-    """
-    vegetable_name = request.json['vegetable_name']
-    if vegetable_name:
-        if VegetableModelDao.get_id_by_name(vegetable_name):
-            vegetable_information = VegetableModelDao.get_information(vegetable_name)
-            if vegetable_information is None:
-                # 无蔬菜信息
-                response_data = response[20503]
-            else:
-                #获取信息成功
-                response_data = {'vegetable_info': vegetable_information}
-                response_data.update(response[200])
-        else:
-            #缺少蔬菜
-            response_data = response[20401]
-    else:
-        #缺少参数
-        response_data = response[20101]
-    return json.dumps(response_data, ensure_ascii=False)
-
-
 alter_email_code = ''
+
 
 @user_app.route('alter_pwd', methods=['POST'])
 @catch_error
@@ -201,7 +175,7 @@ def alter_pwd():
             # 邮箱验证码错误
             response_data = response[20305]
         else:
-            #修改成功
+            # 修改成功
             UserModelDao.alter_user_pwd(user_name, new_password)
             response_data = response[200]
     else:
@@ -255,14 +229,16 @@ def model_info():
                 # 无模型信息
                 response_data = response[20502]
             else:
-                #获取信息成功
+                # 获取信息成功
                 response_data = {'model_info': model_information}
                 response_data.update(response[200])
         else:
-            #缺少模型
+            # 缺少模型
             response_data = response[20501]
     else:
-        #缺少参数
+        # 缺少参数
         response_data = response[20101]
 
     return json.dumps(response_data, ensure_ascii=False)
+
+

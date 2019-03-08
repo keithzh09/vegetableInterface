@@ -83,7 +83,7 @@ def train_bp(price_list, path):
                 batch_ys = train_y[i: i + batch_size]
                 i = i + batch_size
                 loss_, _ = sess.run([loss, train_op], feed_dict={x: batch_xs, y: batch_ys, keep_prob: 1})
-            if epoch % 100 == 0:
+            if epoch == bp_train_times-1:  # 最后一次测试准确率
                 print(epoch, loss_)
                 # test_predict = []
                 bool_list_1 = []

@@ -48,7 +48,7 @@ class UserModelDao:
         """
         try:
             user_pwd = md5_encrypt(user_pwd)
-            UserModel.insert(user_name=user_name, user_pwd=user_pwd, email = email).execute()
+            UserModel.insert(user_name=user_name, user_pwd=user_pwd, email=email).execute()
             return True
         except Exception as error:
             print(error)
@@ -73,7 +73,7 @@ class UserModelDao:
                     func = UserModel.select().where(UserModel.email == email)
                 elif func_code == 4:
                     func = UserModel.select().where((UserModel.user_name == user_name) &
-                                                   (UserModel.email == email))
+                                                    (UserModel.email == email))
                 else:
                     func = UserModel.select().where((UserModel.user_name == user_name) &
                                                     (UserModel.user_state == user_state))
@@ -88,7 +88,7 @@ class UserModelDao:
     def set_user_state(user_name, user_state):
         """
         设置用户状态
-        :param user_id: 用户ID
+        :param user_name: 用户ID
         :param user_state: 用户状态，1为启动，0为禁止
         :return:
         """
@@ -98,7 +98,6 @@ class UserModelDao:
         except Exception as error:
             print(error)
             return False
-
 
     @staticmethod
     def alter_user_pwd(user_name, user_pwd):
@@ -113,7 +112,6 @@ class UserModelDao:
         except Exception as error:
             print(error)
             return False
-
 
     @staticmethod
     def set_group_id(user_name, group_id):

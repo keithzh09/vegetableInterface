@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/lin/PycharmProjects/vegetableInterface_0307/model_predict/net_predict/network_save_predict/bp_net/1/veg"
+all_model_checkpoint_paths: "/home/lin/PycharmProjects/vegetableInterface_0307/model_predict/net_predict/network_save_predict/bp_net/1/veg"
