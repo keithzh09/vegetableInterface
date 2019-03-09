@@ -19,6 +19,8 @@ from .dao import mkdir, bp_network
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 显示warning和error
 
+# tf.reset_default_graph()
+
 
 def get_train_test_data(price_list):
     """
@@ -119,6 +121,7 @@ def train_bp(price_list, path):
                 acc_10 = sess.run(accuracy)
                 print(acc_10)
         saver.save(sess, path)
+    print(type(acc_1))
     return acc_1, acc_5, acc_10
 
 
@@ -135,7 +138,7 @@ def training(price_list, veg_name):
     mkdir(path)
     path += save_file_name
     acc_1, acc_5, acc_10 = train_bp(price_list, path)
-    acc_data = {'acc_1': acc_1, 'acc_5': acc_5, 'acc_10': acc_10}
+    acc_data = {'acc_1': round(float(acc_1), 3), 'acc_5': round(float(acc_5), 3), 'acc_10': round(float(acc_10), 3)}
     return acc_data
 
 
@@ -144,5 +147,5 @@ def bp_train(price_list, veg_name):
     acc_data = training(price_list, veg_name)
     end_time = time.time()
     print(veg_name + ' wastes time ', end_time - start_time, ' s')
-    return {"acc_data": acc_data, "time": end_time-start_time}
+    return {"acc_data": acc_data, "time": round(end_time-start_time, 2)}
 

@@ -36,7 +36,7 @@ def predict(price_list, path):
         saver.restore(sess, path)
         for j in range(many_days):
             predict_y = sess.run(prediction, feed_dict={x: [x_in], keep_prob: 1})  # 要三维
-            predict_price.append(predict_y[0][0])
+            predict_price.append(round(float(predict_y[0][0]), 2))
             x_in = np.append(x_in[1:], predict_y[0][0])
     return predict_price
 
