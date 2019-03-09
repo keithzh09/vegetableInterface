@@ -9,4 +9,3 @@ from .predict_model_model import PredictModelModel
 from .user_model import UserModel
 from .vegetable_model import VegetableModel
 from .vegetable_price_model import VegetablePriceModel
-from .vegetable_predict_model_model import VegetablePredictModelModel

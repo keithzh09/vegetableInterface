@@ -4,6 +4,7 @@
 import tensorflow as tf
 import time
 import os
+import numpy as np
 
 from config.network_config import bp_model_save_path, save_file_name, bp_input_size,\
     many_days, output_size
@@ -29,12 +30,14 @@ def predict(price_list, path):
     loss = tf.reduce_mean(tf.square(y - prediction))
     # 梯度下降法
     train_op = tf.train.AdamOptimizer(lf).minimize(loss)
+    x_in = price_list
     with tf.Session() as sess:
         tf.get_variable_scope().reuse_variables()
         saver.restore(sess, path)
         for j in range(many_days):
-            predict_y = sess.run(prediction, feed_dict={x: [price_list], keep_prob: 1})  # 要三维
-            predict_price.append(predict_y[0][0])
+            predict_y = sess.run(prediction, feed_dict={x: [x_in], keep_prob: 1})  # 要三维
+            predict_price.append(round(float(predict_y[0][0]), 2))
+            x_in = np.append(x_in[1:], predict_y[0][0])
     return predict_price
 
 

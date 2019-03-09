@@ -40,8 +40,8 @@ response = {
     20402: {'code': 20402, 'msg': 'Lack vegetable price'},
     # 缺少蔬菜信息
     20403: {'code': 20403, 'msg': 'Lack vegetable information'},
-    # 缺少模型
-    20501: {'code': 20501, 'msg': 'Lack model'},
+    # 缺少模型id
+    20501: {'code': 20501, 'msg': 'Lack model id'},
     # 无模型信息
     20502: {'code': 20502, 'msg': 'Lack model information'}
 }

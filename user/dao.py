@@ -104,6 +104,7 @@ def validate_email(email):
             return 1
     return 0
 
+
 def thread_send_email(email):
     email_code = ''.join(str(i) for i in random.sample(range(0, 9), 4))  # 生成4位随机验证码
     msg = Message('注册验证码', sender='434345158@qq.com', recipients=[email])

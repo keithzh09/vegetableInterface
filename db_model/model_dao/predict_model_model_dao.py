@@ -35,17 +35,16 @@ class PredictModelModelDao:
             print(error)
             return False
 
-
     @staticmethod
-    def query_model(model_name):
+    def get_id_by_name(model_name):
         """
         通过模型名查找模型
         :param model_name: 模型名
         :return:
         """
         try:
-            func = PredictModelModel.select().where(PredictModelModel.model_name == model_name)
-            return func.execute()
-        except Exception as error:
-            print(error)
-            return False
+            user_obj = PredictModelModel.get(PredictModelModel.model_name == model_name)
+            return user_obj.id
+        except DoesNotExist:
+            return -1
+

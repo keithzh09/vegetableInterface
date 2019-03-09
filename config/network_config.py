@@ -11,9 +11,13 @@ test_end = 1060  # 测试数据结束位置
 many_days = 10  # 滚动预测天数
 time_step = 100  # lstm日数
 bp_input_size = 100  # 输入一百个变量
-bp_train_times = 501
+bp_train_times = 101
+lstm_rnn_unit = 50  # lstm网络隐藏层神经元个数
+lstm_input_size = 1  # 输入一个变量，即前一天的价格
+lstm_train_times = 101  # 训练次数
 output_size = 1  # 输出一个变量
 
-bp_model_save_path = "network_save_predict/bp_net/"
-lstm_model_save_path = "network_save_predict/lstm_net/"
+
+bp_model_save_path = "model_predict/net_predict/network_save_predict/bp_net/"
+lstm_model_save_path = "model_predict/net_predict/network_save_predict/lstm_net/"
 save_file_name = '/veg'

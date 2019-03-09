@@ -2,7 +2,7 @@
 # @author  : lin
 # @time    : 19-3-4
 from ..model import UserModel, GroupModel, GroupPowerModel, PredictModelModel, VegetableModel, \
-    VegetablePriceModel, VegetablePredictModelModel
+    VegetablePriceModel
 
 
 def create_table(table):
@@ -28,7 +28,6 @@ def create_all_table():
     create_table(PredictModelModel)
     create_table(VegetableModel)
     create_table(VegetablePriceModel)
-    create_table(VegetablePredictModelModel)
 
 
 def drop_all_table():
@@ -38,5 +37,4 @@ def drop_all_table():
     drop_table(PredictModelModel)
     drop_table(VegetableModel)
     drop_table(VegetablePriceModel)
-    drop_table(VegetablePredictModelModel)
 

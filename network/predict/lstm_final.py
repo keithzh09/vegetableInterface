@@ -8,6 +8,7 @@ import tensorflow as tf
 import time
 import os
 from veg_final_predict.test_data_ok.solve_data_tools import SolveData
+from tensorflow.python.ops.rnn import dynamic_rnn
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -107,9 +108,9 @@ def lstm(x):
     cell = tf.nn.rnn_cell.BasicLSTMCell(rnn_unit)
     init_state = cell.zero_state(batch_size, dtype=tf.float32)
     # output_rnn是记录lstm每个输出节点的结果，final_states是最后一个cell的结果
-    output_rnn, final_states = tf.nn.dynamic_rnn(cell,
-                                                 input_rnn, initial_state=init_state,
-                                                 dtype=tf.float32)
+    output_rnn, final_states = dynamic_rnn(cell,
+                                           input_rnn, initial_state=init_state,
+                                           dtype=tf.float32)
     # -1表示根据实际情况分配,比如出来的数据为100个,rnn_unit为1,则-1的位置会变为100
     output = tf.reshape(output_rnn, [-1, rnn_unit])  # 作为输出层的输入
     w_out = weights['out']
