@@ -38,6 +38,7 @@
 - 2.2 选择模型进行预测：/model/predict
 - 2.3 选择网络模型进行训练，保存模型：/model/network_train
 
+
 ##### 3. 管理员接口
 
 - 3.1 管理员增删系统的蔬菜种类：/manager/alter_vegetable
