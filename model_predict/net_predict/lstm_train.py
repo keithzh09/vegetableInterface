@@ -73,8 +73,7 @@ def train_lstm(veg_id, price_list, path):
         # g = tf.get_default_graph()
         # print(g.get_operations())
         # 命名域区分开来,方可实现多个模型的定义,否则会不知道是哪个
-        with tf.variable_scope(str(veg_id)):
-            predict_value, _ = lstm_network(input_x)
+        predict_value, _ = lstm_network(input_x)
         acc_1 = 0
         acc_5 = 0
         acc_10 = 0
@@ -167,7 +166,6 @@ def training(price_list, veg_id, veg_name):
 
 def lstm_train(price_list, veg_id, veg_name):
     start_time = time.time()
-    print(price_list)
     acc_data = training(price_list, veg_id, veg_name)
     end_time = time.time()
     print(veg_name + ' wastes time ', end_time - start_time, ' s')

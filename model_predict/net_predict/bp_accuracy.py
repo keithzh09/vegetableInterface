@@ -34,7 +34,7 @@ def get_train_test_data(price_list):
     return test_x, test_y
 
 
-def test_bp(price_list, path):
+def run(price_list, path):
     """
     开始训练网络
     :param price_list: 价格数组
@@ -105,12 +105,12 @@ def training(price_list, veg_name):
     path = bp_model_save_path + veg_name
     mkdir(path)
     path += save_file_name
-    acc_1, acc_5, acc_10 = train_bp(price_list, path)
+    acc_1, acc_5, acc_10 = run(price_list, path)
     acc_data = {'acc_1': round(float(acc_1), 3), 'acc_5': round(float(acc_5), 3), 'acc_10': round(float(acc_10), 3)}
     return acc_data
 
 
-def bp_train(price_list, veg_name):
+def bp_get_accuracy(price_list, veg_name):
     start_time = time.time()
     acc_data = training(price_list, veg_name)
     end_time = time.time()

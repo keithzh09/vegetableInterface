@@ -20,21 +20,22 @@ def predict(veg_id, price_list, path):
     :param path: 存放路径
     :return:
     """
+    # tf.reset_default_graph()
     with lstm_graph.as_default():
         input_x = tf.placeholder(tf.float32, shape=[None, time_step, lstm_input_size])
         output_y = tf.placeholder(tf.float32, shape=[None, time_step, output_size])
         # 命名域区分开来,方可实现多个模型的定义,否则会不知道是哪个
-        with tf.variable_scope(str(veg_id)):
-            predict_value, _ = lstm_network(input_x)
+        predict_value, _ = lstm_network(input_x)
         predict_price = []
         saver = tf.train.Saver()
         # 损失函数
         loss = tf.reduce_mean(tf.square(tf.reshape(predict_value, [-1]) - tf.reshape(output_y, [-1])))
         lr = tf.Variable(0.01, dtype=tf.float32)  # 学习率定义
         train_op = tf.train.AdamOptimizer(lr).minimize(loss)
-        x = price_list
+
+        list1 = price_list
+        x = list1
         with tf.Session() as sess:
-            tf.get_variable_scope().reuse_variables()
             saver.restore(sess, path)
             for j in range(many_days):  # 滚动多少天
                 predict_y = sess.run(predict_value, feed_dict={input_x: [x]})  # 要三维
