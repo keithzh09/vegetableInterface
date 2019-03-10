@@ -10,7 +10,10 @@ from lib.decorator import catch_error
 from .net_predict import bp_train, bp_predict, lstm_train, lstm_predict
 from .dao import day_increase, day_decrease
 from db_model.model_dao import UserModelDao, VegetableModelDao, VegetablePriceModelDao, PredictModelModelDao
+# import multiprocessing
+from multiprocessing import Pool
 
+pool = Pool(processes=4)
 model_app = Blueprint("model", __name__)
 
 
@@ -87,18 +90,32 @@ def network_train():
     """
     req_json = request.json
     model_name = req_json['model_name']
-    veg_name = req_json['veg_name']
-    if not (model_name and veg_name):
+    veg_list = req_json['veg_list']
+    if not (model_name and veg_list):
         return json.dumps(response[20101], ensure_ascii=False)
     model_id = PredictModelModelDao.get_id_by_name(model_name)
     if model_id == -1:
         return json.dumps(response[20501], ensure_ascii=False)
-    veg_id = VegetableModelDao.get_id_by_name(veg_name)
-    veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(1, veg_id)
-    price_list = [veg_model.price for veg_model in veg_model_list][-1060:]
-    if model_id == 1:
-        response_data = bp_train(price_list, veg_name)
-    else:
-        response_data = lstm_train(price_list, veg_id, veg_name)
-    response_data.update(response[200])
-    return json.dumps(response_data)
+    result_list = []
+    for veg_name in veg_list:
+        veg_id = VegetableModelDao.get_id_by_name(veg_name)
+        veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(1, veg_id)
+        price_list = [veg_model.price for veg_model in veg_model_list][-1060:]
+
+        if model_id == 1:
+            # response_data = bp_train(price_list, veg_name)
+            # p = multiprocessing.Process(target=bp_train, args=(price_list, veg_name,))
+            # p.start()
+            # 异步加入进程池
+            result = pool.apply_async(bp_train, (price_list, veg_name,))
+            result_list.append(result)
+        else:
+            # response_data = lstm_train(price_list, veg_id, veg_name)
+            # p = multiprocessing.Process(target=lstm_train, args=(price_list, veg_id, veg_name,))
+            # p.start()
+            result = pool.apply_async(lstm_train, (price_list, veg_id, veg_name,))
+            result_list.append(result)
+    # for result in result_list:  # get得到返回信息
+    #     print(result.get())
+    # response_data.update(response[200])
+    return json.dumps(response[200])
