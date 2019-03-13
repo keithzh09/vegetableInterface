@@ -43,8 +43,8 @@ class PredictModelModelDao:
         :return:
         """
         try:
-            user_obj = PredictModelModel.get(PredictModelModel.model_name == model_name)
-            return user_obj.id
+            model_obj = PredictModelModel.get(PredictModelModel.model_name == model_name)
+            return model_obj.id
         except DoesNotExist:
-            return -1
+            return 0
 

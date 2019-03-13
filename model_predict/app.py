@@ -20,28 +20,29 @@ model_app = Blueprint("model", __name__)
 
 @model_app.route('information', methods=['POST'])
 @catch_error
-def vegetable_info():
+def model_info():
     """
-    获取蔬菜信息
+    获取模型信息
     :return:
     """
-    vegetable_name = request.json['vegetable_name']
-    if vegetable_name:
-        if VegetableModelDao.get_id_by_name(vegetable_name):
-            vegetable_information = VegetableModelDao.get_information(vegetable_name)
-            if vegetable_information is None:
-                # 无蔬菜信息
-                response_data = response[20503]
+    model_name = request.json['model_name']
+    if model_name:
+        if PredictModelModelDao.get_id_by_name(model_name):
+            model_information = PredictModelModelDao.get_information(model_name)
+            if model_information is None:
+                # 无模型信息
+                response_data = response[20502]
             else:
                 # 获取信息成功
-                response_data = {'vegetable_info': vegetable_information}
+                response_data = {'model_info': model_information}
                 response_data.update(response[200])
         else:
-            # 缺少蔬菜
-            response_data = response[20401]
+            # 缺少模型
+            response_data = response[20501]
     else:
         # 缺少参数
         response_data = response[20101]
+
     return json.dumps(response_data, ensure_ascii=False)
 
 
@@ -52,7 +53,6 @@ def predict_price():
     选择模型进行预测, 控制好id为1是指bp, id为2是指lstm
     :return:
     """
-
     new_pool = Pool(processes=4)
     req_json = request.json
     model_name = req_json['model_name']

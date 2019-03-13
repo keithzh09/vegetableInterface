@@ -214,31 +214,28 @@ def alter_send_email():
     return json.dumps(response_data, ensure_ascii=False)
 
 
-@user_app.route('model/information', methods=['POST'])
+@user_app.route('vegetable/information', methods=['POST'])
 @catch_error
-def model_info():
+def vegetable_info():
     """
-    获取模型信息
+    获取蔬菜信息
     :return:
     """
-    model_name = request.json['model_name']
-    if model_name:
-        if PredictModelModelDao.query_model(model_name):
-            model_information = PredictModelModelDao.get_information(model_name)
-            if model_information is None:
-                # 无模型信息
-                response_data = response[20502]
+    vegetable_name = request.json['vegetable_name']
+    if vegetable_name:
+        if VegetableModelDao.get_id_by_name(vegetable_name):
+            vegetable_information = VegetableModelDao.get_information(vegetable_name)
+            if vegetable_information is None:
+                # 无蔬菜信息
+                response_data = response[20503]
             else:
                 # 获取信息成功
-                response_data = {'model_info': model_information}
+                response_data = {'vegetable_info': vegetable_information}
                 response_data.update(response[200])
         else:
-            # 缺少模型
-            response_data = response[20501]
+            # 缺少蔬菜
+            response_data = response[20401]
     else:
         # 缺少参数
         response_data = response[20101]
-
     return json.dumps(response_data, ensure_ascii=False)
-
-
