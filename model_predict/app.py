@@ -56,7 +56,7 @@ def predict_price():
     new_pool = Pool(processes=4)
     req_json = request.json
     model_name = req_json['model_name']
-    veg_name = req_json['veg_name']
+    veg_name = req_json['vegetable_name']
     start_date = req_json['start_date']
     if not (model_name and veg_name and start_date):
         return json.dumps(response[20101], ensure_ascii=False)
@@ -99,7 +99,7 @@ def network_train():
     """
     req_json = request.json
     model_name = req_json['model_name']
-    veg_list = req_json['veg_list']
+    veg_list = req_json['vegetable_list']
     if not (model_name and veg_list):
         return json.dumps(response[20101], ensure_ascii=False)
     model_id = PredictModelModelDao.get_id_by_name(model_name)
@@ -128,7 +128,7 @@ def get_accuracy():
     new_pool = Pool(processes=4)
     req_json = request.json
     model_name = req_json['model_name']
-    veg_name = req_json['veg_name']
+    veg_name = req_json['vegetable_name']
     if not (model_name and veg_name):
         return json.dumps(response[20101], ensure_ascii=False)
     model_id = PredictModelModelDao.get_id_by_name(model_name)
