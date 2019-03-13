@@ -17,10 +17,10 @@ redis_config = {
 # mysql配置
 mysql_config = {
     'db_name': 'vegetable_predict',
-    'db_user': 'root',
-    'db_password': '112366',
+    'db_user': 'veg_user',
+    'db_password': '111222',
     'db_port': 3306,
-    'db_host': '127.0.0.1'
+    'db_host': '106.15.182.134'
 }
 
 pool = redis.ConnectionPool(host=redis_config['redis_host'], port=redis_config['redis_port'],
