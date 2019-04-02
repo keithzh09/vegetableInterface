@@ -33,7 +33,7 @@ class UserModelDao:
         :return:
         """
         try:
-            return UserModel.get(UserModel.user_id == user_id)
+            return UserModel.get(UserModel.id == user_id)
         except DoesNotExist:
             return None
 
@@ -55,30 +55,41 @@ class UserModelDao:
             return False
 
     @staticmethod
-    def query_user(func_code, user_name="", email="", user_state=1):
+    def query_user(func_code, user_name="", email="", group_id=1, user_state=-1):
         """
         查找用户
-        :param func_code: 条件类型，0为查找全部，1为按用户名查找，2为按用户状态查找，3为按组合条件查找
+        :param func_code: 条件类型，0为查找某个状态的，1为按用户名查找和状态查找，2为按用户邮箱和状态查找，3为按
+        用户组查找
+        :param group_id: 用户组
         :param user_name: 用户名
+        :param email: 邮箱
         :param user_state: 用户状态
         :return: model列表
         """
         try:
-            if func_code:
-                if func_code == 1:
-                    func = UserModel.select().where(UserModel.user_name == user_name)
-                elif func_code == 2:
-                    func = UserModel.select().where(UserModel.user_state == user_state)
-                elif func_code == 3:
-                    func = UserModel.select().where(UserModel.email == email)
-                elif func_code == 4:
-                    func = UserModel.select().where((UserModel.user_name == user_name) &
-                                                    (UserModel.email == email))
+            if user_state == 0 or user_state == 1:
+                if func_code:
+                    if func_code == 1:
+                        func = UserModel.select().where((UserModel.user_state == user_state) &
+                                                        (UserModel.user_name == user_name))
+                    elif func_code == 2:
+                        func = UserModel.select().where((UserModel.user_state == user_state) &
+                                                        (UserModel.email == email))
+                    else:
+                        func = UserModel.select().where((UserModel.user_state == user_state) &
+                                                        (UserModel.group_id == group_id))
                 else:
-                    func = UserModel.select().where((UserModel.user_name == user_name) &
-                                                    (UserModel.user_state == user_state))
+                    func = UserModel.select().where(UserModel.user_state == user_state)
             else:
-                func = UserModel.select().where(UserModel.user_id > 1)
+                if func_code:
+                    if func_code == 1:
+                        func = UserModel.select().where(UserModel.user_name == user_name)
+                    elif func_code == 2:
+                        func = UserModel.select().where(UserModel.email == email)
+                    else:
+                        func = UserModel.select().where(UserModel.group_id == group_id)
+                else:
+                    func = UserModel.select().where(UserModel.id > 0)
             return func.execute()
         except Exception as error:
             print(error)
@@ -127,3 +138,13 @@ class UserModelDao:
         except Exception as error:
             print(error)
             return False
+
+    @staticmethod
+    def get_ui_config():
+        columns = [
+            {'title': '用户名', 'key': 'user_name', 'align': 'center'},
+            {'title': '用户密码', 'key': 'user_pwd', 'align': 'center'},
+            {'title': '用户状态', 'key': 'user_state', 'align': 'center'},
+            {'title': '用户邮箱', 'key': 'email', 'align': 'center'},
+        ]
+        return columns
