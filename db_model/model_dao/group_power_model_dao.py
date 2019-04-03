@@ -30,3 +30,18 @@ class GroupPowerModelDao:
         """
         objs = GroupPowerModel.select().where(GroupPowerModel.group_id == group_id)
         return [obj.url for obj in objs]
+
+    @staticmethod
+    def add_one_power(group_id, url):
+        """
+        添加
+        :param group_id:
+        :param api_url:
+        :return:
+        """
+        try:
+            GroupPowerModel.insert(group_id=group_id, url=url).execute()
+            return True
+        except Exception as error:
+            print(error)
+            return False
