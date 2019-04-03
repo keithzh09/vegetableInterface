@@ -1,10 +1,11 @@
 # coding: utf-8
 # @author  : lin
 # @time    : 19-2-28
-from . import dao
+from lib import dao
+from . import dao as root_dao
 from flask import request, Blueprint
 from lib.http_response_code import response
-from lib.decorator import catch_error
+from lib.decorator import catch_error, check_user_permission
 from db_model.model_dao import UserModelDao
 import json
 
@@ -13,6 +14,7 @@ root_app = Blueprint('root_app', __name__)
 
 @root_app.route('add_manager', methods=['POST'])
 @catch_error
+@check_user_permission
 def add_manager():
     """
     添加管理员
@@ -33,6 +35,7 @@ def add_manager():
 
 @root_app.route('delete_manager', methods=['POST'])
 @catch_error
+@check_user_permission
 def delete_manager():
     """
     删除管理员
@@ -53,11 +56,12 @@ def delete_manager():
 
 @root_app.route('get_info', methods=['GET'])
 @catch_error
+@check_user_permission
 def get_user_info():
     token = request.headers.get('token')
     user_id = dao.get_user_id_from_token(token)
     print(user_id)
-    user_name = dao.get_user_name_from_id(user_id)
+    user_name = root_dao.get_user_name_from_id(user_id)
     # uid =
     res = {
         'avator': 'ME',   # 头像
@@ -84,7 +88,7 @@ def user_login():
         return json.dumps(response[20101])
 
     user_id = UserModelDao.check_user_and_user_pwd(user_name, user_pwd)
-    if not dao.is_user_root(user_id):
+    if not root_dao.is_user_root(user_id):
         # 校验不通过
         return json.dumps(response[20201]) if user_id == -1 else json.dumps(response[20202])
 
@@ -110,6 +114,7 @@ def user_logout():
 
 @root_app.route('get_user_mount', methods=['GET'])
 @catch_error
+@check_user_permission
 def get_user_mount():
     """
     得到用户数量
@@ -131,6 +136,7 @@ def get_user_mount():
 
 @root_app.route('get_user_data', methods=['POST'])
 @catch_error
+@check_user_permission
 def get_user_data():
     page_size = request.json['page_size']
     page = request.json['page']
@@ -148,6 +154,7 @@ def get_user_data():
 
 @root_app.route('get_user_ui', methods=['GET'])
 @catch_error
+@check_user_permission
 def return_ui_config():
     columns = UserModelDao.get_ui_config()
     return json.dumps({'code': 200, 'msg': 'Success', 'data': columns})
