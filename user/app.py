@@ -134,14 +134,13 @@ def get_k_line():
     if not (vegetable_name and date):
         return json.dumps(response[20101])
     price = []
-    new_date = []
-    for veg_name in vegetable_name:
-        veg_id = VegetableModelDao.get_id_by_name(veg_name)
-        veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(2, veg_id, date[0], date[1])
-        price.append([veg_model.price for veg_model in veg_model_list])
-        new_date.append([veg_model.date for veg_model in veg_model_list])
+    veg_id = VegetableModelDao.get_id_by_name(vegetable_name)
+    veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(2, veg_id, date[0], date[1])
+    for veg_model in veg_model_list:
+        one_price = [vegetable_name, veg_model.date, veg_model.price, veg_model.place]
+        price.append(one_price)
 
-    response_data = {'vegetable_name': vegetable_name, 'price': price, 'date': new_date}
+    response_data = {'vegetable_name': vegetable_name, 'price': price}
     response_data.update(response[200])
     return json.dumps(response_data)
 
