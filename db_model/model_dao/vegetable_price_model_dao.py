@@ -19,6 +19,9 @@ class VegetablePriceModelDao:
         :return:
         """
         try:
+            if VegetablePriceModelDao.query_vegetable_price_data(2, veg_id=veg_id, start_date=date, stop_date=date)\
+                    is not None:
+                return False
             VegetablePriceModel.insert(veg_id=veg_id, date=date, price=price, place=place).execute()
             return True
         except Exception as error:

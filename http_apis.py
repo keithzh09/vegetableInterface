@@ -22,5 +22,5 @@ app.register_blueprint(root_app, url_prefix='/root')
 app.register_blueprint(model_app, url_prefix='/model')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=8080, debug=True)
     # 定时爬虫任务,另开一个进程运行
