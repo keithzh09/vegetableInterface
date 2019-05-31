@@ -140,7 +140,7 @@ def get_k_line():
         one_price = [vegetable_name, veg_model.date, veg_model.price, veg_model.place]
         price.append(one_price)
 
-    response_data = {'vegetable_name': vegetable_name, 'price': price}
+    response_data = {'data': {'vegetable_name': vegetable_name, 'price': price}}
     response_data.update(response[200])
     return json.dumps(response_data)
 
