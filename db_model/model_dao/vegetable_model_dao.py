@@ -84,3 +84,15 @@ class VegetableModelDao:
             print(error)
             return False
 
+    @staticmethod
+    def query_vegetable():
+        """
+        查找所有蔬菜
+        """
+        try:
+            func = VegetableModel.select().where(VegetableModel.id > 0)
+            return func.execute()
+        except Exception as error:
+            print(error)
+            return False
+

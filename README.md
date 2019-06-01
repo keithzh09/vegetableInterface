@@ -31,6 +31,7 @@
 - 1.3 修改密码：/user/alter_pwd
 - 1.4 查询蔬菜价格曲线：/user/vegetable/k_line
 - 1.5 查询蔬菜信息：/user/vegetable/information
+- 1.6 查询所有蔬菜：/user/vegetable/get_all_vegetables
 
 ##### 2. 模型接口
 

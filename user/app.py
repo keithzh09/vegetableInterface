@@ -238,3 +238,23 @@ def vegetable_info():
         # 缺少参数
         response_data = response[20101]
     return json.dumps(response_data, ensure_ascii=False)
+
+
+@user_app.route('vegetable/get_all_vegetables', methods=['GET'])
+@catch_error
+def all_vegetable():
+    """
+    获取所有蔬菜
+    :return:
+    """
+    data = []
+    vegetable_list = VegetableModelDao.query_vegetable()
+    for i in range(len(vegetable_list)):
+        vegetable = vegetable_list[i]
+        one_data_1 = {'name': vegetable.veg_name, 'img_url': vegetable.veg_img_url,
+                      'description': vegetable.veg_information}
+        one_data = {str(i + 1): one_data_1}
+        data.append(one_data)
+    response_data = {'data': data}
+    response_data.update(response[200])
+    return json.dumps(response_data, ensure_ascii=False)
