@@ -60,35 +60,42 @@ import time
 # VegetableModelDao.add_vegetable('丝瓜', '它是丝瓜')
 
 
-print(VegetableModelDao.get_id_by_name('白萝卜'))
+# print(VegetableModelDao.get_id_by_name('白萝卜'))
+#
+# # print(veg_data)
+# # print(VegetablePriceModelDao.delete_all_data())
+#
+#
+# veg_data = pd.read_csv('白萝卜.csv').iloc[:, 0:4]
+# # print(veg_data)
+# # print(VegetablePriceModelDao.delete_all_data())
+#
+# start_t = time.time()
+# isd = VegetableModelDao.get_id_by_name('白萝卜')
+# for index, row in veg_data.iterrows():
+#     VegetablePriceModelDao.add_one_data(isd, row['date'], row['price'], row['place'])
+# stop_t = time.time()
+#
+# print(stop_t-start_t)
+#
+# veg_data = pd.read_csv('茄瓜.csv').iloc[:, 0:4]
+# # print(veg_data)
+# # print(VegetablePriceModelDao.delete_all_data())
+#
+# start_t = time.time()
+# isd = VegetableModelDao.get_id_by_name('茄瓜')
+# for i in VegetablePriceModelDao.query_vegetable_price_data(1, isd):
+#     print(i)
+# for index, row in veg_data.iterrows():
+#     VegetablePriceModelDao.add_one_data(isd, row['date'], row['price'], row['place'])
+# stop_t = time.time()
+# for i in VegetablePriceModelDao.query_vegetable_price_data(1, isd):
+#     print(i)
+# print(stop_t-start_t)
 
-# print(veg_data)
-# print(VegetablePriceModelDao.delete_all_data())
 
+from db_model.model_dao import VegetableModelDao
 
-veg_data = pd.read_csv('白萝卜.csv').iloc[:, 0:4]
-# print(veg_data)
-# print(VegetablePriceModelDao.delete_all_data())
-
-start_t = time.time()
-isd = VegetableModelDao.get_id_by_name('白萝卜')
-for index, row in veg_data.iterrows():
-    VegetablePriceModelDao.add_one_data(isd, row['date'], row['price'], row['place'])
-stop_t = time.time()
-
-print(stop_t-start_t)
-
-veg_data = pd.read_csv('茄瓜.csv').iloc[:, 0:4]
-# print(veg_data)
-# print(VegetablePriceModelDao.delete_all_data())
-
-start_t = time.time()
-isd = VegetableModelDao.get_id_by_name('茄瓜')
-for i in VegetablePriceModelDao.query_vegetable_price_data(1, isd):
-    print(i)
-for index, row in veg_data.iterrows():
-    VegetablePriceModelDao.add_one_data(isd, row['date'], row['price'], row['place'])
-stop_t = time.time()
-for i in VegetablePriceModelDao.query_vegetable_price_data(1, isd):
-    print(i)
-print(stop_t-start_t)
+# VegetableModelDao.alter_info('白菜', '它是白菜')
+# VegetableModelDao.alter_url('白菜', '/usr/data/img.png')
+VegetableModelDao.add_vegetable('傻逼', '不死的白色不打算', 'user/sjda/sda')

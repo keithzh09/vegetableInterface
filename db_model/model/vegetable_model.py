@@ -7,7 +7,8 @@ from peewee import CharField, BigIntegerField, TextField
 
 
 class VegetableModel(BaseModel):
-    veg_name = CharField()
+    veg_name = CharField(max_length=20)
+    veg_img_url = CharField(max_length=128)
     veg_information = TextField()
 
     class Meta:
