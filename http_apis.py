@@ -22,5 +22,7 @@ app.register_blueprint(root_app, url_prefix='/root')
 app.register_blueprint(model_app, url_prefix='/model')
 
 if __name__ == '__main__':
+    app.jinja_env.auto_reload = True
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(host='127.0.0.1', port=8080, debug=True)
     # 定时爬虫任务,另开一个进程运行

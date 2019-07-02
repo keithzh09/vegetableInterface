@@ -20,7 +20,7 @@ mysql_config = {
     'db_user': 'veg_user',
     'db_password': '111222',
     'db_port': 3306,
-    'db_host': '106.15.182.134'
+    'db_host': '39.106.53.169'
 }
 
 pool = redis.ConnectionPool(host=redis_config['redis_host'], port=redis_config['redis_port'],

@@ -9,8 +9,8 @@ from cron_spider import spider_vegetable
 from db_model.model_dao import VegetablePriceModelDao, VegetableModelDao, drop_all_table, create_all_table
 import pandas as pd
 import time
-# drop_all_table()
-# create_all_table()
+drop_all_table()
+create_all_table()
 
 #
 # import pandas as pd
@@ -98,4 +98,6 @@ from db_model.model_dao import VegetableModelDao
 
 # VegetableModelDao.alter_info('白菜', '它是白菜')
 # VegetableModelDao.alter_url('白菜', '/usr/data/img.png')
-VegetableModelDao.add_vegetable('傻逼', '不死的白色不打算', 'user/sjda/sda')
+# VegetableModelDao.add_vegetable('傻逼', '不死的白色不打算', 'user/sjda/sda')
+
+# UserModelDao.alter_user_pwd('dibiao175', '123456')
