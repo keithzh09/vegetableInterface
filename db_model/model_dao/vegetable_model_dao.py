@@ -3,7 +3,7 @@
 # @time    : 19-3-3
 
 from ..model import VegetableModel
-from peewee import DoesNotExist
+from peewee import DoesNotExist, chunked
 
 
 class VegetableModelDao:
@@ -40,6 +40,22 @@ class VegetableModelDao:
         try:
             VegetableModel.insert(veg_name=veg_name, veg_information=veg_information, veg_img_url=veg_img_url).execute()
             return True
+        except Exception as error:
+            print(error)
+            return False
+
+    @staticmethod
+    def add_many_data(all_data):
+        """
+        同时插入很多数据
+        all_data的格式要符合field，ed. [('地瓜', '是地瓜', '/sda/sdas/ssd.img'), (...)]，本质是list&tuple
+        :return:
+        """
+        try:
+            field = [VegetableModel.veg_name, VegetableModel.veg_information,
+                     VegetableModel.place]
+            for data_chunk in chunked(all_data, 1000):
+                VegetableModel.insert_many(data_chunk, field).execute()
         except Exception as error:
             print(error)
             return False

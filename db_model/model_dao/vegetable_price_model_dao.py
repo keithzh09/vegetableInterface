@@ -4,6 +4,7 @@
 
 
 from ..model import VegetablePriceModel
+from peewee import chunked
 
 
 class VegetablePriceModelDao:
@@ -19,11 +20,27 @@ class VegetablePriceModelDao:
         :return:
         """
         try:
-            if VegetablePriceModelDao.query_vegetable_price_data(2, veg_id=veg_id, start_date=date, stop_date=date)\
-                    is not None:
-                return False
+            # if not VegetablePriceModelDao.query_vegetable_price_data(5, veg_id=veg_id, start_date=date, stop_date=date
+            # ):
+            #     return False
             VegetablePriceModel.insert(veg_id=veg_id, date=date, price=price, place=place).execute()
             return True
+        except Exception as error:
+            print(error)
+            return False
+
+    @staticmethod
+    def add_many_data(all_data):
+        """
+        同时插入很多数据
+        all_data的格式要符合field，ed. [(1, '2018-01-01', 12.1, '山东'), (...)]，本质是list&tuple
+        :return:
+        """
+        try:
+            field = [VegetablePriceModel.veg_id, VegetablePriceModel.date, VegetablePriceModel.price,
+                     VegetablePriceModel.place]
+            for data_chunk in chunked(all_data, 1000):
+                VegetablePriceModel.insert_many(data_chunk, field).execute()
         except Exception as error:
             print(error)
             return False
@@ -33,7 +50,8 @@ class VegetablePriceModelDao:
         # TODO:加个修饰器，当func_code与访问值不符合时返回错误
         """
         查找价格数据
-        :param func_code: 条件类型，0为查找全部，1为按蔬菜名查找，2为按蔬菜名加日期，3为按蔬菜名加价格，4为组合三种因素
+        :param func_code: 条件类型，0为查找全部，1为按蔬菜名查找，2为按蔬菜名加日期，3为按蔬菜名加价格，
+                          5为以蔬菜名和日期查找单条数据，4为组合三种因素，
         :param veg_id:
         :param start_date: 开始日期
         :param stop_date: 结束日期
@@ -54,6 +72,11 @@ class VegetablePriceModelDao:
                 func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
                                                           (VegetablePriceModel.price >= start_price) &
                                                           (VegetablePriceModel.price <= stop_price)).execute()
+            # elif func_code == 5:
+            #     func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
+            #                                               (VegetablePriceModel.date == start_date)).dicts()
+            #     for i in func:
+            #         print(i)
             else:
                 func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
                                                           (VegetablePriceModel.date >= start_date) &
