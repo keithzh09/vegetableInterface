@@ -253,7 +253,7 @@ def all_vegetable():
         vegetable = vegetable_list[i]
         one_data_1 = {'name': vegetable.veg_name, 'img_url': vegetable.veg_img_url,
                       'description': vegetable.veg_information}
-//        one_data = {str(i + 1): one_data_1}
+#        one_data = {str(i + 1): one_data_1}
         data.append(one_data_1)
     response_data = {'data': data}
     response_data.update(response[200])
