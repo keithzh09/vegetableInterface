@@ -159,7 +159,7 @@ def alter_pwd():
     req_json = request.json
     user_name = req_json['user_name']
     new_password = req_json['new_password']
-    re_password = req_json['re_password']
+    # re_password = req_json['re_password']
     email = req_json['email']
     user_email_code = req_json['email_code']
 
@@ -167,9 +167,9 @@ def alter_pwd():
         if not UserModelDao.query_user(1, user_name=user_name):
             # 用户名不存在
             response_data = response[20201]
-        elif new_password != re_password:
+        # elif new_password != re_password:
             # 两次输入密码不一致
-            response_data = response[20304]
+            # response_data = response[20304]
         elif user_email_code != alter_email_code:
             # 邮箱验证码错误
             response_data = response[20305]
