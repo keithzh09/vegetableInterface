@@ -59,7 +59,7 @@ def register():
     data = request.json  # 获取表单数据
     name = data["user_name"]
     pwd = data["password"]
-    check_pwd = data["check_password"]
+    # check_pwd = data["check_password"]
     email = data["email"]
     user_email_code = data["email_code"]
 
@@ -73,9 +73,9 @@ def register():
         elif len(pwd) < 6:
             # 密码长度太短
             response_data = response[20303]
-        elif check_pwd != pwd:
+        # elif check_pwd != pwd:
             # 两次密码输入不一致
-            response_data = response[20304]
+            # response_data = response[20304]
         elif user_email_code != register_email_code:
             # 邮箱验证码错误
             response_data = response[20305]
