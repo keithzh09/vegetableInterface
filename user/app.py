@@ -105,7 +105,7 @@ def register_send_email():
         if not dao.validate_email(email):
             # 邮箱格式错误
             response_data = response[20307]
-        elif UserModelDao.query_user(3, email=email):
+        elif UserModelDao.query_user(2, email=email):
             # 邮箱已被使用
             response_data = response[20306]
         else:
