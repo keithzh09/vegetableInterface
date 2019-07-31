@@ -63,7 +63,7 @@ def register():
     email = data["email"]
     user_email_code = data["email_code"]
 
-    if name and pwd and email and user_email_code and check_pwd:
+    if name and pwd and email and user_email_code:# and check_pwd:
         if not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', name):
             # 用户名格式出错
             response_data = response[20302]
@@ -163,7 +163,7 @@ def alter_pwd():
     email = req_json['email']
     user_email_code = req_json['email_code']
 
-    if user_name and new_password and re_password and email and user_email_code:
+    if user_name and new_password and email and user_email_code:
         if not UserModelDao.query_user(1, user_name=user_name):
             # 用户名不存在
             response_data = response[20201]
