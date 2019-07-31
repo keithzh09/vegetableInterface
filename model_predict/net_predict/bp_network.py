@@ -9,6 +9,9 @@ import numpy as np
 from config.network_config import bp_model_save_path, save_file_name, batch_size, \
     train_begin, train_end, test_begin, test_end, many_days, bp_train_times, output_size, bp_input_size
 
+tf.reset_default_graph()
+bp_graph = tf.Graph()
+
 
 def mkdir(path):
     """
@@ -27,25 +30,26 @@ def bp_network(x, keep_prob):
     :param keep_prob: 每次参与的神经元百分比
     :return:
     """
-    w = tf.Variable(tf.truncated_normal([bp_input_size, 500], stddev=0.1))
-    b = tf.Variable(tf.zeros([500]) + 0.1)
-    re = tf.matmul(x, w) + b
-    l1 = tf.nn.elu(re)  # 激活函数
-    l1_drop = tf.nn.dropout(l1, keep_prob)  # keep_prob设为1则百分百的神经元工作,L1作为神经元的输出传入
-    w2 = tf.Variable(tf.truncated_normal([500, 30], stddev=0.1))
-    b2 = tf.Variable(tf.zeros([30]) + 0.1)
-    re2 = tf.matmul(l1_drop, w2) + b2
-    l2 = tf.nn.elu(re2)  # 激活函数
-    l2_drop = tf.nn.dropout(l2, keep_prob)
-    # w3 = tf.Variable(tf.truncated_normal([300, 30], stddev=0.1))
-    # b3 = tf.Variable(tf.zeros([30]) + 0.1)
-    # re3 = tf.matmul(l2_drop, w3) + b3
-    # l3 = tf.nn.elu(re3)  # 激活函数
-    # l3_drop = tf.nn.dropout(l3, keep_prob)
-    w4 = tf.Variable(tf.random_normal([30, output_size], stddev=0.1))
-    b4 = tf.Variable(tf.zeros([output_size]) + 0.1)
-    prediction = tf.matmul(l2_drop, w4) + b4
-    return prediction
+    with lstm_graph.as_default():
+        w = tf.Variable(tf.truncated_normal([bp_input_size, 500], stddev=0.1))
+        b = tf.Variable(tf.zeros([500]) + 0.1)
+        re = tf.matmul(x, w) + b
+        l1 = tf.nn.elu(re)  # 激活函数
+        l1_drop = tf.nn.dropout(l1, keep_prob)  # keep_prob设为1则百分百的神经元工作,L1作为神经元的输出传入
+        w2 = tf.Variable(tf.truncated_normal([500, 30], stddev=0.1))
+        b2 = tf.Variable(tf.zeros([30]) + 0.1)
+        re2 = tf.matmul(l1_drop, w2) + b2
+        l2 = tf.nn.elu(re2)  # 激活函数
+        l2_drop = tf.nn.dropout(l2, keep_prob)
+        # w3 = tf.Variable(tf.truncated_normal([300, 30], stddev=0.1))
+        # b3 = tf.Variable(tf.zeros([30]) + 0.1)
+        # re3 = tf.matmul(l2_drop, w3) + b3
+        # l3 = tf.nn.elu(re3)  # 激活函数
+        # l3_drop = tf.nn.dropout(l3, keep_prob)
+        w4 = tf.Variable(tf.random_normal([30, output_size], stddev=0.1))
+        b4 = tf.Variable(tf.zeros([output_size]) + 0.1)
+        prediction = tf.matmul(l2_drop, w4) + b4
+        return prediction
 
 
 def get_train_test_data(price_list):
@@ -117,27 +121,28 @@ def predict_process(price_list, path):
     :param path: 存放路径
     :return:
     """
-    x = tf.placeholder(tf.float32, [None, bp_input_size])
-    y = tf.placeholder(tf.float32, [None, output_size])
-    keep_prob = tf.placeholder(tf.float32)
-    lf = tf.Variable(0.01, dtype=tf.float32)  # 学习率定义
-    prediction = bp_network(x, keep_prob)  # 建立网络
-    saver = tf.train.Saver()
-    predict_price = []
-    # 交叉熵
-    loss = tf.reduce_mean(tf.square(y - prediction))
-    # 梯度下降法
-    train_op = tf.train.AdamOptimizer(lf).minimize(loss)
-    x_in = price_list
-    with tf.Session() as sess:
-        tf.get_variable_scope().reuse_variables()
-        saver.restore(sess, path)
-        for j in range(many_days):
-            predict_y = sess.run(prediction, feed_dict={x: [x_in], keep_prob: 1})  # 要三维
-            predict_price.append(round(float(predict_y[0][0]), 2))
-            x_in = np.append(x_in[1:], predict_y[0][0])
-    return predict_price
-
+    with lstm_graph.as_default():
+        x = tf.placeholder(tf.float32, [None, bp_input_size])
+        y = tf.placeholder(tf.float32, [None, output_size])
+        keep_prob = tf.placeholder(tf.float32)
+        lf = tf.Variable(0.01, dtype=tf.float32)  # 学习率定义
+        prediction = bp_network(x, keep_prob)  # 建立网络
+        saver = tf.train.Saver()
+        predict_price = []
+        # 交叉熵
+        loss = tf.reduce_mean(tf.square(y - prediction))
+        # 梯度下降法
+        train_op = tf.train.AdamOptimizer(lf).minimize(loss)
+        x_in = price_list
+        with tf.Session() as sess:
+            tf.get_variable_scope().reuse_variables()
+            saver.restore(sess, path)
+            for j in range(many_days):
+                predict_y = sess.run(prediction, feed_dict={x: [x_in], keep_prob: 1})  # 要三维
+                predict_price.append(round(float(predict_y[0][0]), 2))
+                x_in = np.append(x_in[1:], predict_y[0][0])
+        return predict_price
+    
 
 def bp_predict(price_list, veg_name):
     start_time = time.time()
