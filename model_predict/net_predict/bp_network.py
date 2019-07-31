@@ -30,7 +30,7 @@ def bp_network(x, keep_prob):
     :param keep_prob: 每次参与的神经元百分比
     :return:
     """
-    with lstm_graph.as_default():
+    with bp_graph.as_default():
         w = tf.Variable(tf.truncated_normal([bp_input_size, 500], stddev=0.1))
         b = tf.Variable(tf.zeros([500]) + 0.1)
         re = tf.matmul(x, w) + b
@@ -121,7 +121,7 @@ def predict_process(price_list, path):
     :param path: 存放路径
     :return:
     """
-    with lstm_graph.as_default():
+    with bp_graph.as_default():
         x = tf.placeholder(tf.float32, [None, bp_input_size])
         y = tf.placeholder(tf.float32, [None, output_size])
         keep_prob = tf.placeholder(tf.float32)
