@@ -30,13 +30,18 @@ class VegetablePriceModelDao:
             return False
 
     @staticmethod
-    def add_many_data(all_data):
+    def add_many_data(veg_id, veg_df_data):
         """
         同时插入很多数据
-        all_data的格式要符合field，ed. [(1, '2018-01-01', 12.1, '山东'), (...)]，本质是list&tuple
+        :param veg_id: 蔬菜id
+        :param veg_df_data: 一个dataframe格式的数据，必须包含字段date, price, place
         :return:
         """
         try:
+            all_data = []
+            for index, row in veg_df_data.iterrows():
+                # all_data的格式要符合field，ed. [(1, '2018-01-01', 12.1, '山东'), (...)]，本质是list&tuple
+                all_data.append((veg_id, row['date'], row['price'], row['place']))
             field = [VegetablePriceModel.veg_id, VegetablePriceModel.date, VegetablePriceModel.price,
                      VegetablePriceModel.place]
             for data_chunk in chunked(all_data, 1000):

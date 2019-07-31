@@ -168,7 +168,7 @@ def get_test_data(price_list):
 
 def get_accuracy_process(price_list, path):
     """
-    开始训练网络
+    得到准确率
     :param price_list: 价格数组
     :param path: 保存网络的路径
     :return:
