@@ -142,7 +142,10 @@ def get_accuracy():
     price_list = [veg_model.price for veg_model in veg_model_list][-1060:]
 
     if model_id == 1:
-        response_data = bp_get_accuracy(price_list, veg_name)
+        # response_data = bp_get_accuracy(price_list, veg_name)
+        price_list = manager.list(price_list)
+        result = new_pool.apply_async(bp_get_accuracy, (price_list, veg_name,))
+        response_data = result.get()
     else:
         # response_data = lstm_get_accuracy(price_list, veg_id, veg_name)
         # 另开一个进程解决  <class 'ValueError'> Variable 1/rnn/basic_lstm_cell/kernel already exists, disallowed.
