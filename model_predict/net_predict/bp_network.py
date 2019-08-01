@@ -77,31 +77,32 @@ def train_process(price_list, path):
     :param path: 保存网络的路径
     :return:
     """
-    x = tf.placeholder(tf.float32, [None, bp_input_size])
-    y = tf.placeholder(tf.float32, [None, output_size])
-    keep_prob = tf.placeholder(tf.float32)
-    lf = tf.Variable(0.01, dtype=tf.float32)  # 学习率定义
-    prediction = bp_network(x, keep_prob)  # 建立网络
-    n_batch, train_x, train_y = get_train_test_data(price_list)
-    # 交叉熵
-    loss = tf.reduce_mean(tf.square(y - prediction))
-    # 梯度下降法
-    train_op = tf.train.AdamOptimizer(lf).minimize(loss)
-    saver = tf.train.Saver()
-    with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
-        for epoch in range(bp_train_times):  # 迭代周期
-            i = 0
-            sess.run(tf.assign(lf, 0.01 * 0.95 ** epoch))  # 修改学习率，越来越小
-            # 分批次出来，batch_xs和batch_ys为每次投入训练的数据
-            for batch in range(n_batch):
-                batch_xs = train_x[i: i + batch_size]
-                batch_ys = train_y[i: i + batch_size]
-                i = i + batch_size
-                loss_, _ = sess.run([loss, train_op], feed_dict={x: batch_xs, y: batch_ys, keep_prob: 1})
-            if epoch % 100 == 0:
-                print(epoch, loss_)
-        saver.save(sess, path)
+    with bp_graph.as_default():
+        x = tf.placeholder(tf.float32, [None, bp_input_size])
+        y = tf.placeholder(tf.float32, [None, output_size])
+        keep_prob = tf.placeholder(tf.float32)
+        lf = tf.Variable(0.01, dtype=tf.float32)  # 学习率定义
+        prediction = bp_network(x, keep_prob)  # 建立网络
+        n_batch, train_x, train_y = get_train_test_data(price_list)
+        # 交叉熵
+        loss = tf.reduce_mean(tf.square(y - prediction))
+        # 梯度下降法
+        train_op = tf.train.AdamOptimizer(lf).minimize(loss)
+        saver = tf.train.Saver()
+        with tf.Session() as sess:
+            sess.run(tf.global_variables_initializer())
+            for epoch in range(bp_train_times):  # 迭代周期
+                i = 0
+                sess.run(tf.assign(lf, 0.01 * 0.95 ** epoch))  # 修改学习率，越来越小
+                # 分批次出来，batch_xs和batch_ys为每次投入训练的数据
+                for batch in range(n_batch):
+                    batch_xs = train_x[i: i + batch_size]
+                    batch_ys = train_y[i: i + batch_size]
+                    i = i + batch_size
+                    loss_, _ = sess.run([loss, train_op], feed_dict={x: batch_xs, y: batch_ys, keep_prob: 1})
+                if epoch % 100 == 0:
+                    print(epoch, loss_)
+            saver.save(sess, path)
 
 
 def bp_train(price_list, veg_name):
@@ -178,49 +179,50 @@ def get_accuracy_process(price_list, path):
     :param path: 保存网络的路径
     :return:
     """
-    x = tf.placeholder(tf.float32, [None, bp_input_size])
-    y = tf.placeholder(tf.float32, [None, output_size])
-    keep_prob = tf.placeholder(tf.float32)
-    lf = tf.Variable(0.01, dtype=tf.float32)  # 学习率定义
-    prediction = bp_network(x, keep_prob)  # 建立网络
-    test_x, test_y = get_test_data(price_list)
-    # 交叉熵
-    loss = tf.reduce_mean(tf.square(y - prediction))
-    # 梯度下降法
-    train_op = tf.train.AdamOptimizer(lf).minimize(loss)
-    saver = tf.train.Saver()
-    with tf.Session() as sess:
-        saver.restore(sess, path)
-        bool_list_1 = []
-        bool_list_5 = []
-        bool_list_10 = []
-        for step in range(len(test_x)):
-            x_in = test_x[step]
-            for j in range(many_days):
-                predict_y = sess.run(prediction, feed_dict={x: [x_in], keep_prob: 1})  # 要三维
-                predict_y = predict_y[0]
-                origin_y = test_y[step + j]
-                if j == many_days - 1:
-                    # 获取其准确率
-                    bool_list_1.append((abs(predict_y - origin_y) / origin_y < 0.01)[0])
-                    bool_list_5.append((abs(predict_y - origin_y) / origin_y < 0.05)[0])
-                    bool_list_10.append((abs(predict_y - origin_y) / origin_y < 0.1)[0])
-                x_in = np.append(x_in[1:], predict_y)  # 将计算值添加进去
-                # x = [[num] for num in x]
-        # 误差小于1%的准确率
-        # cast函数将其转换为float形式
-        num_list = (tf.cast(bool_list_1, tf.float32))
-        # reduce_mean取平均值，此时True为1，False为0，平均值其实就是准确率
-        accuracy = tf.reduce_mean(num_list)
-        acc_1 = sess.run(accuracy)
-        num_list = (tf.cast(bool_list_5, tf.float32))
-        accuracy = tf.reduce_mean(num_list)
-        acc_5 = sess.run(accuracy)
-        num_list = (tf.cast(bool_list_10, tf.float32))
-        accuracy = tf.reduce_mean(num_list)
-        acc_10 = sess.run(accuracy)
-    print(acc_1, acc_5, acc_10)
-    return acc_1, acc_5, acc_10
+    with bp_graph.as_default():
+        x = tf.placeholder(tf.float32, [None, bp_input_size])
+        y = tf.placeholder(tf.float32, [None, output_size])
+        keep_prob = tf.placeholder(tf.float32)
+        lf = tf.Variable(0.01, dtype=tf.float32)  # 学习率定义
+        prediction = bp_network(x, keep_prob)  # 建立网络
+        test_x, test_y = get_test_data(price_list)
+        # 交叉熵
+        loss = tf.reduce_mean(tf.square(y - prediction))
+        # 梯度下降法
+        train_op = tf.train.AdamOptimizer(lf).minimize(loss)
+        saver = tf.train.Saver()
+        with tf.Session() as sess:
+            saver.restore(sess, path)
+            bool_list_1 = []
+            bool_list_5 = []
+            bool_list_10 = []
+            for step in range(len(test_x)):
+                x_in = test_x[step]
+                for j in range(many_days):
+                    predict_y = sess.run(prediction, feed_dict={x: [x_in], keep_prob: 1})  # 要三维
+                    predict_y = predict_y[0]
+                    origin_y = test_y[step + j]
+                    if j == many_days - 1:
+                        # 获取其准确率
+                        bool_list_1.append((abs(predict_y - origin_y) / origin_y < 0.01)[0])
+                        bool_list_5.append((abs(predict_y - origin_y) / origin_y < 0.05)[0])
+                        bool_list_10.append((abs(predict_y - origin_y) / origin_y < 0.1)[0])
+                    x_in = np.append(x_in[1:], predict_y)  # 将计算值添加进去
+                    # x = [[num] for num in x]
+            # 误差小于1%的准确率
+            # cast函数将其转换为float形式
+            num_list = (tf.cast(bool_list_1, tf.float32))
+            # reduce_mean取平均值，此时True为1，False为0，平均值其实就是准确率
+            accuracy = tf.reduce_mean(num_list)
+            acc_1 = sess.run(accuracy)
+            num_list = (tf.cast(bool_list_5, tf.float32))
+            accuracy = tf.reduce_mean(num_list)
+            acc_5 = sess.run(accuracy)
+            num_list = (tf.cast(bool_list_10, tf.float32))
+            accuracy = tf.reduce_mean(num_list)
+            acc_10 = sess.run(accuracy)
+        print(acc_1, acc_5, acc_10)
+        return acc_1, acc_5, acc_10
 
 
 def bp_get_accuracy(price_list, veg_name):
