@@ -68,7 +68,10 @@ def predict_price():
     veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(2, veg_id, pre_date, start_date)
     price_list = [veg_model.price for veg_model in veg_model_list][-100:]  # 只取100个
     if model_id == 1:
-        new_price_list = bp_predict(price_list, veg_name)
+        # new_price_list = bp_predict(price_list, veg_name)
+        # 以这个解决本地训练然后传到服务器进行测试的网络模型
+        result = new_pool.apply_async(bp_predict, (price_list, veg_name,))
+        new_price_list = result.get()
     elif model_id == 2:
         # new_price_list = lstm_predict(price_list, veg_id, veg_name)
         # 另开一个进程解决  <class 'ValueError'> Variable 1/rnn/basic_lstm_cell/kernel already exists, disallowed.
