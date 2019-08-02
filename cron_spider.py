@@ -71,6 +71,7 @@ def spider_vegetable():
     for i in range(len(name)):
         veg_id = VegetableModelDao.get_id_by_name(name[i])
         VegetablePriceModelDao.add_one_data(veg_id, date[i], price[i], place[i])
+    print('SPIDER OVER')
 
 
 def cron_task(the_time):
@@ -86,6 +87,6 @@ def cron_task(the_time):
 
 
 if __name__ == '__main__':
-    p = Process(target=cron_task, args=('02:40',))
+    p = Process(target=cron_task, args=('20:00',))
     p.start()
 
