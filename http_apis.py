@@ -4,8 +4,6 @@
 
 from flask import Flask
 from flask_cors import *
-from multiprocessing import Process
-from cron_spider import cron_task
 app = Flask(__name__)
 
 from user import user_app
@@ -23,9 +21,6 @@ app.register_blueprint(root_app, url_prefix='/root')
 app.register_blueprint(model_app, url_prefix='/model')
 
 if __name__ == '__main__':
-    p = Process(target=cron_task, args=('20:00',))
-    p.start()
-
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(host='127.0.0.1', port=8080, debug=True)

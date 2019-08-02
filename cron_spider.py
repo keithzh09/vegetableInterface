@@ -86,7 +86,7 @@ def cron_task(the_time):
         time.sleep(2)
 
 
-# if __name__ == '__main__':
-#     p = Process(target=cron_task, args=('02:38',))
-#     p.start()
+if __name__ == '__main__':
+
+    cron_task('20:00')
 
