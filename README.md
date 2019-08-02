@@ -46,12 +46,14 @@
 ##### 3. 管理员接口
 
 - 3.1 管理员增删系统的蔬菜种类：/manager/alter_vegetable
-- 3.2 管理员禁用用户：/manager/set_user_state
+- 3.2 管理员设置用户状态（禁用功能）：/manager/set_user_state
+- 3.3 管理员按照页数获取用户信息：/manager/get_user_data
+- 3.4 获取用户数目：/manager/get_user_amount
 
 ##### 4. 超级管理员接口
 
-- 4.1 超级管理员从用户中添加管理员：/root/add_master
-- 4.2 超级管理员删除管理员：/root/delete_master
+- 4.1 超级管理员从用户中添加管理员：/root/add_manager
+- 4.2 超级管理员删除管理员：/root/delete_manager
 
 #### 完成情况
 
