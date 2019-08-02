@@ -83,10 +83,10 @@ def cron_task(the_time):
     schedule.every().day.at(the_time).do(spider_vegetable)
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(2)
 
 
-if __name__ == '__main__':
-    p = Process(target=cron_task, args=('20:00',))
-    p.start()
+# if __name__ == '__main__':
+#     p = Process(target=cron_task, args=('02:38',))
+#     p.start()
 
