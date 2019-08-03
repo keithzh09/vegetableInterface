@@ -70,7 +70,8 @@ def spider_vegetable():
     # 添加到数据库中
     for i in range(len(name)):
         veg_id = VegetableModelDao.get_id_by_name(name[i])
-        VegetablePriceModelDao.add_one_data(veg_id, date[i], price[i], place[i])
+        str_time = date[i].replace('/', '-')
+        VegetablePriceModelDao.add_one_data(veg_id, str_time, price[i], place[i])
     print('SPIDER OVER')
 
 

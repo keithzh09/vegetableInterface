@@ -5,6 +5,7 @@ import re
 import json
 
 from flask import request
+from datetime import datetime, timedelta
 from . import dao
 from db_model.model_dao import UserModelDao, VegetableModelDao, VegetablePriceModelDao, PredictModelModelDao
 from lib.http_response_code import response
@@ -255,6 +256,28 @@ def all_vegetable():
                       'description': vegetable.veg_information}
 #        one_data = {str(i + 1): one_data_1}
         data.append(one_data_1)
+    response_data = {'data': data}
+    response_data.update(response[200])
+    return json.dumps(response_data, ensure_ascii=False)
+
+
+@user_app.route('vegetable/today_price', methods=['GET'])
+@catch_error
+def today_vegetable():
+    """
+    今日菜价，若还没到20点则显示昨日菜价
+    :return:
+    """
+    today_time = datetime.now()
+    yes_day = today_time + timedelta(days=-1)
+    today_time = today_time.strftime('%Y-%m-%d %H:%M:%s').split(' ')
+    hour = today_time[1].split(':')[0]
+    minute = today_time[1].split(':')[1]
+    if int(hour) < 20 or (int(hour) == 20 and int(minute) < 1):
+        today_time = yes_day.strftime('%Y-%m-%d %H:%M:%s').split(' ')[0]
+    else:
+        today_time = today_time[0]  # '2019-08-03'
+    data = dao.get_today_price(today_time)
     response_data = {'data': data}
     response_data.update(response[200])
     return json.dumps(response_data, ensure_ascii=False)

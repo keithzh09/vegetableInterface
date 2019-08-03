@@ -56,7 +56,7 @@ class VegetablePriceModelDao:
         """
         查找价格数据
         :param func_code: 条件类型，0为查找全部，1为按蔬菜名查找，2为按蔬菜名加日期，3为按蔬菜名加价格，
-                          5为以蔬菜名和日期查找单条数据，4为组合三种因素，
+                          5为以日期查找多条数据，4为组合三种因素，
         :param veg_id:
         :param start_date: 开始日期
         :param stop_date: 结束日期
@@ -77,9 +77,8 @@ class VegetablePriceModelDao:
                 func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
                                                           (VegetablePriceModel.price >= start_price) &
                                                           (VegetablePriceModel.price <= stop_price)).execute()
-            # elif func_code == 5:
-            #     func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
-            #                                               (VegetablePriceModel.date == start_date)).dicts()
+            elif func_code == 5:
+                func = VegetablePriceModel.select().where(VegetablePriceModel.date == start_date).execute()
             #     for i in func:
             #         print(i)
             else:

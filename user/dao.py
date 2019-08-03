@@ -3,7 +3,7 @@
 # @time    : 19-2-28
 from threading import Thread
 
-from db_model.model_dao import UserModelDao, GroupPowerModelDao
+from db_model.model_dao import UserModelDao, GroupPowerModelDao, VegetableModelDao, VegetablePriceModelDao
 # from . import config
 from config.db_config import redis_client
 from lib.MD5_encrypt import md5_encrypt
@@ -65,3 +65,22 @@ def thread_send_email(email):
     thread = Thread(target=send_email, args=[msg])  # 开启另一线程执行发邮件功能
     thread.start()
     return email_code
+
+
+def get_today_price(today_time):
+    data = redis_client.get('REDIS_TODAY_VEG_PRICE' + today_time)
+    if not data:
+        data = []
+        veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(5, start_date=today_time)
+        for veg_model in veg_model_list:
+            veg_name = VegetableModelDao.get_name_by_id(veg_model.veg_id)
+            one_price = [veg_name, veg_model.date, veg_model.price, veg_model.place]
+            data.append(one_price)
+        if len(data) > 0:
+            redis_client.set('REDIS_TODAY_VEG_PRICE' + today_time, str(data))
+            # 设置过期时间
+            redis_client.expire('REDIS_TODAY_VEG_PRICE' + today_time, 3600*24)
+    else:
+        data = eval(data)
+    return data
+

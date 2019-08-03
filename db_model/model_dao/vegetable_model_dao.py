@@ -16,6 +16,14 @@ class VegetableModelDao:
             return None
 
     @staticmethod
+    def get_name_by_id(veg_id):
+        try:
+            obj = VegetableModel.get(VegetableModel.id == veg_id)
+            return obj.veg_name
+        except DoesNotExist:
+            return None
+
+    @staticmethod
     def get_information(veg_name):
         """
         通过蔬菜名查询数据

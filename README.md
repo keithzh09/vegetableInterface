@@ -34,6 +34,7 @@
 - 1.6 查询蔬菜价格曲线：/user/vegetable/k_line
 - 1.7 查询蔬菜信息：/user/vegetable/information
 - 1.8 查询所有蔬菜：/user/vegetable/get_all_vegetables
+- 1.9 查询今日菜价：/user/vegetable/today_price
 
 ##### 2. 模型接口
 
