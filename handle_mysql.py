@@ -6,6 +6,7 @@ from db_model.model_dao import VegetablePriceModelDao, VegetableModelDao, Predic
 
 import pandas as pd
 import time
+import os
 
 create_all_table()
 
@@ -345,3 +346,22 @@ veg_all_data.append(('紫椰菜',
 VegetableModelDao.add_many_data(veg_all_data)
 
 print('初始数据插入完毕，开始爬虫')
+csv_save_path = 'csv_save_path/'
+
+""" 爬虫部分 """
+
+
+"""爬虫结束"""
+
+# 将蔬菜数据录入数据库
+start_t = time.time()
+for root, dirs, files in os.walk(csv_save_path):
+    for file in files:
+        veg_name = file.split('.')[0]
+        veg_id = VegetableModelDao.get_id_by_name(veg_name)
+        uri = root + file
+        veg_data = pd.read_csv(uri)
+        VegetablePriceModelDao.add_many_data(veg_data)
+stop_t = time.time()
+print(stop_t-start_t, 's')
+
