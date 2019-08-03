@@ -7,6 +7,11 @@ from db_model.model_dao import VegetablePriceModelDao, VegetableModelDao, Predic
 import pandas as pd
 import time
 import os
+import csv
+import pathlib
+import time
+import requests
+from lxml import etree
 
 create_all_table()
 
@@ -349,7 +354,63 @@ print('初始数据插入完毕，开始爬虫')
 csv_save_path = 'csv_save_path/'
 
 """ 爬虫部分 """
+# 请求头
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/57.0.2987.133 Safari/537.36'
+}
 
+# 初始化访问地址
+base_url = "http://www.jnmarket.net/import/list-1_"
+offset = 1
+
+# 获取总的页面数
+url = base_url + str(offset) + ".html"
+response = requests.get(url, headers=headers)
+html = response.text
+selector = etree.HTML(html)
+page_num = selector.xpath('/html/body/div[4]/div/div[2]/div[2]/div[2]/a[4]/text()')[0]
+print(page_num)
+response.close()
+
+# 爬取数据并添加到字典中
+while offset <= int(page_num):
+    url = base_url + str(offset) + ".html"
+    print(url)
+    response = requests.get(url, headers=headers)
+    html = response.text
+    selector = etree.HTML(html)
+
+    spider_date = selector.xpath('//table/tbody/tr/td[5]/text()')  # 蔬菜名字
+    spider_name = selector.xpath('//table/tbody/tr/td[1]/text()')  # 蔬菜产地
+    spider_place = selector.xpath('//table/tbody/tr/td[2]/text()')  # 蔬菜价格
+    spider_price = selector.xpath('//table/tbody/tr/td[3]/text()')  # 日期
+    response.close()
+
+    # 格式化日期
+    for i in range(len(spider_date)):
+        time_struct = time.strptime(spider_date[i], "%y-%m-%d")
+        spider_date[i] = time.strftime("%Y-%m-%d", time_struct)
+
+        path = pathlib.Path(csv_save_path + spider_name[i] + '.csv')
+
+        # 如果不存在相应文件的话，创建该文件
+        if not path.is_file():
+            with open(path, 'w', encoding='utf8') as f:
+                writer = csv.writer(f)
+                csv_head = ['name', 'date', 'price', 'place']
+                writer.writerow(csv_head)
+
+        # 每爬取一个页面就写入csv文件中
+        with open(path, 'a+', encoding='utf8') as f:
+            writer = csv.writer(f)
+            writer.writerow((spider_name[i], spider_date[i], spider_price[i], spider_place[i]))
+
+    offset += 1
+
+    # 每爬取20个页面就休眠5秒
+    if offset % 20 == 0:
+        time.sleep(5)
 
 """爬虫结束"""
 
@@ -359,9 +420,9 @@ for root, dirs, files in os.walk(csv_save_path):
     for file in files:
         veg_name = file.split('.')[0]
         veg_id = VegetableModelDao.get_id_by_name(veg_name)
-        uri = root + file
-        veg_data = pd.read_csv(uri)
-        VegetablePriceModelDao.add_many_data(veg_data)
+        if veg_id is not None:
+            uri = root + file
+            veg_data = pd.read_csv(uri)
+            VegetablePriceModelDao.add_many_data(veg_id, veg_data)
 stop_t = time.time()
-print(stop_t-start_t, 's')
-
+print(stop_t - start_t, 's')
