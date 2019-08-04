@@ -41,6 +41,7 @@ GroupPowerModelDao.add_one_power(1, '/user/vegetable/get_all_vegetables')
 GroupPowerModelDao.add_one_power(1, '/model/information')
 GroupPowerModelDao.add_one_power(1, '/model/predict')
 GroupPowerModelDao.add_one_power(1, '/model/get_accuracy')
+GroupPowerModelDao.add_one_power(1, '/user/vegetable/today_price')
 
 GroupPowerModelDao.add_one_power(2, '/user/register')
 GroupPowerModelDao.add_one_power(2, '/user/login')
@@ -58,6 +59,7 @@ GroupPowerModelDao.add_one_power(2, '/manager/get_user_data')
 GroupPowerModelDao.add_one_power(2, '/manager/get_user_amount')
 GroupPowerModelDao.add_one_power(2, '/manager/alter_vegetable')
 GroupPowerModelDao.add_one_power(2, '/manager/set_user_state')
+GroupPowerModelDao.add_one_power(2, '/user/vegetable/today_price')
 
 GroupPowerModelDao.add_one_power(3, '/user/register')
 GroupPowerModelDao.add_one_power(3, '/user/login')
@@ -77,6 +79,7 @@ GroupPowerModelDao.add_one_power(3, '/manager/alter_vegetable')
 GroupPowerModelDao.add_one_power(3, '/manager/set_user_state')
 GroupPowerModelDao.add_one_power(3, '/root/add_manager')
 GroupPowerModelDao.add_one_power(3, '/root/delete_manager')
+GroupPowerModelDao.add_one_power(3, '/user/vegetable/today_price')
 
 # 添加蔬菜信息
 veg_all_data = list()
