@@ -27,12 +27,12 @@ def bp_network(x, keep_prob):
     :param keep_prob: 每次参与的神经元百分比
     :return:
     """
-    w = tf.Variable(tf.truncated_normal([bp_input_size, 500], stddev=0.1))
-    b = tf.Variable(tf.zeros([500]) + 0.1)
+    w = tf.Variable(tf.truncated_normal([bp_input_size, 100], stddev=0.1))
+    b = tf.Variable(tf.zeros([100]) + 0.1)
     re = tf.matmul(x, w) + b
     l1 = tf.nn.elu(re)  # 激活函数
     l1_drop = tf.nn.dropout(l1, keep_prob)  # keep_prob设为1则百分百的神经元工作,L1作为神经元的输出传入
-    w2 = tf.Variable(tf.truncated_normal([500, 30], stddev=0.1))
+    w2 = tf.Variable(tf.truncated_normal([100, 30], stddev=0.1))
     b2 = tf.Variable(tf.zeros([30]) + 0.1)
     re2 = tf.matmul(l1_drop, w2) + b2
     l2 = tf.nn.elu(re2)  # 激活函数

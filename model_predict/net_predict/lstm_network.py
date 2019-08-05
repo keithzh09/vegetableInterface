@@ -10,7 +10,7 @@ from config.network_config import lstm_input_size
 from tensorflow.python.ops.rnn import dynamic_rnn
 from config.network_config import lstm_model_save_path, save_file_name, batch_size, \
     train_begin, train_end, test_begin, test_end, many_days, output_size, \
-    time_step, lstm_rnn_unit, lstm_train_times
+    time_step, lstm_rnn_unit1, lstm_rnn_unit2, lstm_train_times
 
 tf.reset_default_graph()
 
@@ -29,11 +29,11 @@ lstm_graph = tf.Graph()
 with lstm_graph.as_default():
     # 输入层、输出层权重、偏置
     weights = {
-        'in': tf.Variable(tf.random_normal([lstm_input_size, lstm_rnn_unit])),
-        'out': tf.Variable(tf.random_normal([lstm_rnn_unit, 1]))
+        'in': tf.Variable(tf.random_normal([lstm_input_size, lstm_rnn_unit1])),
+        'out': tf.Variable(tf.random_normal([lstm_rnn_unit2, 1]))
     }
     biases = {
-        'in': tf.Variable(tf.constant(0.1, shape=[lstm_rnn_unit, ])),
+        'in': tf.Variable(tf.constant(0.1, shape=[lstm_rnn_unit1, ])),
         'out': tf.Variable(tf.constant(0.1, shape=[1, ]))
     }
 
@@ -55,16 +55,18 @@ def lstm_network(x):
         input_value = tf.reshape(x, [-1, lstm_input_size])  # 需要将tensor转成2维进行计算，计算后的结果作为隐藏层的输入
         input_rnn = tf.matmul(input_value, w_in) + b_in
         # lstm的输入格式即为[batch_size, time_step, 输入变量数目]
-        input_rnn = tf.reshape(input_rnn, [-1, the_time_step, lstm_rnn_unit])  # 将tensor转成3维，作为lstm cell的输入
-        cell = tf.nn.rnn_cell.BasicLSTMCell(lstm_rnn_unit)
-        init_state = cell.zero_state(the_batch_size, dtype=tf.float32)
+        input_rnn = tf.reshape(input_rnn, [-1, the_time_step, lstm_rnn_unit1])  # 将tensor转成3维，作为lstm cell的输入
+        cell1 = tf.nn.rnn_cell.BasicLSTMCell(lstm_rnn_unit1)
+        cell2 = tf.contrib.rnn.BasicLSTMCell(lstm_rnn_unit2)
+        cell = tf.contrib.rnn.MultiRNNCell(cells=[cell1, cell2])
+        # init_state = cell.zero_state(batch_size, dtype=tf.float32)
         # output_rnn是记录lstm每个输出节点的结果，final_states是最后一个cell的结果
         output_rnn, final_states = dynamic_rnn(cell,
-                                               input_rnn, initial_state=init_state,
+                                               input_rnn,  # initial_state=init_state,
                                                dtype=tf.float32)
 
         # -1表示根据实际情况分配,比如出来的数据为100个,rnn_unit为1,则-1的位置会变为100
-        output = tf.reshape(output_rnn, [-1, lstm_rnn_unit])  # 作为输出层的输入
+        output = tf.reshape(output_rnn, [-1, lstm_rnn_unit2])  # 作为输出层的输入
         w_out = weights['out']
         b_out = biases['out']
         predict_value = tf.matmul(output, w_out) + b_out
