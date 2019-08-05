@@ -68,11 +68,13 @@ class VegetablePriceModelDao:
             if func_code == 0:
                 func = VegetablePriceModel.select().execute()
             elif func_code == 1:
-                func = VegetablePriceModel.select().where(VegetablePriceModel.veg_id == veg_id).execute()
+                func = VegetablePriceModel.select().where(VegetablePriceModel.veg_id == veg_id)\
+                    .order_by(VegetablePriceModel.date).execute().execute()
             elif func_code == 2:
                 func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
                                                           (VegetablePriceModel.date >= start_date) &
-                                                          (VegetablePriceModel.date <= stop_date)).execute()
+                                                          (VegetablePriceModel.date <= stop_date))\
+                    .order_by(VegetablePriceModel.date).execute()
             elif func_code == 3:
                 func = VegetablePriceModel.select().where((VegetablePriceModel.veg_id == veg_id) &
                                                           (VegetablePriceModel.price >= start_price) &
