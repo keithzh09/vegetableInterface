@@ -111,7 +111,7 @@ def network_train():
     for veg_name in veg_list:
         veg_id = VegetableModelDao.get_id_by_name(veg_name)
         veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(1, veg_id)
-        price_list = [veg_model.price for veg_model in veg_model_list][-1060:]
+        price_list = [veg_model.price for veg_model in veg_model_list]  # [-1060:]
 
         if model_id == 1:
             # 异步加入进程池
@@ -139,7 +139,7 @@ def get_accuracy():
         return json.dumps(response[20501], ensure_ascii=False)
     veg_id = VegetableModelDao.get_id_by_name(veg_name)
     veg_model_list = VegetablePriceModelDao.query_vegetable_price_data(1, veg_id)
-    price_list = [veg_model.price for veg_model in veg_model_list][-1060:]
+    price_list = [veg_model.price for veg_model in veg_model_list]  # [-1060:]
 
     if model_id == 1:
         # response_data = bp_get_accuracy(price_list, veg_name)
