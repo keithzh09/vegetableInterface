@@ -8,6 +8,6 @@ gunicorn==19.9.0
 lxml==4.3.0
 tensorflow==1.13.1
 pandas==0.24.0
-numpy==1.16.2
+numpy==1.22.0
 Flask-Cors==3.0.3
 peewee==3.8.2
